@@ -12,5 +12,21 @@ namespace Ubiquity\security\acl\models;
 class Permission extends AbstractAclPart {
 
 	protected $level;
+
+	/**
+	 *
+	 * @return mixed
+	 */
+	public function getLevel() {
+		return $this->level;
+	}
+
+	/**
+	 *
+	 * @param mixed $level
+	 */
+	public function setLevel($level) {
+		$this->level = $level;
+	}
 }
 

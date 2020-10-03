@@ -28,5 +28,15 @@ abstract class AbstractAclPart {
 	public function setName($name) {
 		$this->name = $name;
 	}
+
+	public function toArray(): array {
+		return \get_object_vars($this);
+	}
+
+	public function fromArray(array $values) {
+		foreach ($values as $k => $v) {
+			$this->$k = $v;
+		}
+	}
 }
 
