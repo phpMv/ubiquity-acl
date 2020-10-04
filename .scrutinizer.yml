@@ -3,6 +3,7 @@ build:
     analysis:
       dependencies:
         before:
+          - composer require codeception/codeception:^4.1 --dev
       environment:
         php:
           version: 7.4
