@@ -1,5 +1,6 @@
 <?php
 use Ubiquity\security\acl\AclManager;
+use Ubiquity\exceptions\AclException;
 
 /**
  * AclManager test case.
@@ -28,60 +29,98 @@ class AclManagerTest extends \Codeception\Test\Unit {
 	 * Tests AclManager::initFromProviders()
 	 */
 	public function testInitFromProviders() {
-		// TODO Auto-generated AclManagerTest::testInitFromProviders()
-		$this->markTestIncomplete("initFromProviders test not implemented");
-
-		AclManager::initFromProviders(/* parameters */);
+		$this->aclManager->start();
+		$this->aclManager->initFromProviders([]);
+		$this->assertFalse($this->aclManager->isAllowed('@ALL'));
 	}
 
 	/**
 	 * Tests AclManager::addRole()
 	 */
 	public function testAddRole() {
-		// TODO Auto-generated AclManagerTest::testAddRole()
-		$this->markTestIncomplete("addRole test not implemented");
+		$this->aclManager->start();
+		$this->expectException(AclException::class);
+		$this->aclManager->isAllowed('newRole');
 
-		AclManager::addRole(/* parameters */);
+		$this->aclManager->addRole('newRole');
+		$this->assertFalse($this->aclManager->isAllowed('newRole'));
 	}
 
 	/**
 	 * Tests AclManager::addResource()
 	 */
 	public function testAddResource() {
-		// TODO Auto-generated AclManagerTest::testAddResource()
-		$this->markTestIncomplete("addResource test not implemented");
-
-		AclManager::addResource(/* parameters */);
+		$this->aclManager->start();
+		$this->aclManager->addResource('newResource');
+		$this->assertFalse($this->aclManager->isAllowed('@ALL', 'newResource'));
 	}
 
 	/**
 	 * Tests AclManager::addPermission()
 	 */
 	public function testAddPermission() {
-		// TODO Auto-generated AclManagerTest::testAddPermission()
-		$this->markTestIncomplete("addPermission test not implemented");
+		$this->aclManager->start();
+		$this->aclManager->allow('@ALL');
+		$this->expectException(AclException::class);
+		$this->aclManager->isAllowed('@ALL', '*', 'READ');
 
-		AclManager::addPermission(/* parameters */);
+		$this->aclManager->addPermission('READ');
+		$this->assertTrue($this->aclManager->isAllowed('@ALL', '*', 'READ'));
 	}
 
 	/**
 	 * Tests AclManager::allow()
 	 */
 	public function testAllow() {
-		// TODO Auto-generated AclManagerTest::testAllow()
-		$this->markTestIncomplete("allow test not implemented");
+		$this->aclManager->start();
+		$this->aclManager->addPermission('READ');
+		$this->aclManager->addResource('newResource');
+		$this->aclManager->addRole('user');
+		$this->assertFalse($this->aclManager->isAllowed('@ALL', '*', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('@ALL', 'newResource', 'READ'));
 
-		AclManager::allow(/* parameters */);
+		$this->assertFalse($this->aclManager->isAllowed('user', '*', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('user', 'newResource', 'READ'));
+
+		$this->aclManager->allow('user', 'newResource', 'READ');
+
+		$this->assertFalse($this->aclManager->isAllowed('user', '*', 'READ'));
+		$this->assertTrue($this->aclManager->isAllowed('user', 'newResource', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('user', 'newResource'));
 	}
 
 	/**
 	 * Tests AclManager::isAllowed()
 	 */
 	public function testIsAllowed() {
-		// TODO Auto-generated AclManagerTest::testIsAllowed()
-		$this->markTestIncomplete("isAllowed test not implemented");
+		$this->aclManager->start();
+		$this->aclManager->addPermission('READ');
+		$this->aclManager->addResource('newResource');
+		$this->aclManager->addRole('user');
+		$this->assertFalse($this->aclManager->isAllowed('@ALL', '*', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('@ALL', 'newResource', 'READ'));
 
-		AclManager::isAllowed(/* parameters */);
+		$this->assertFalse($this->aclManager->isAllowed('user', '*', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('user', 'newResource', 'READ'));
+
+		$this->aclManager->allow('user', 'newResource', 'READ');
+
+		$this->assertFalse($this->aclManager->isAllowed('user', '*', 'READ'));
+		$this->assertTrue($this->aclManager->isAllowed('user', 'newResource', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('user', 'newResource'));
+
+		$this->aclManager->addRole('userPlus', [
+			'user'
+		]);
+
+		$this->assertFalse($this->aclManager->isAllowed('userPlus', '*', 'READ'));
+		$this->assertTrue($this->aclManager->isAllowed('userPlus', 'newResource', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('userPlus', 'newResource'));
+
+		$this->aclManager->allow('@ALL', 'newResource');
+		$this->assertTrue($this->aclManager->isAllowed('user', 'newResource'));
+		$this->aclManager->addRole('admin');
+		$this->assertTrue($this->aclManager->isAllowed('admin', 'newResource'));
 	}
 }
 
