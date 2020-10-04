@@ -119,8 +119,35 @@ class AclManagerTest extends \Codeception\Test\Unit {
 
 		$this->aclManager->allow('@ALL', 'newResource');
 		$this->assertTrue($this->aclManager->isAllowed('user', 'newResource'));
+		$this->assertTrue($this->aclManager->isAllowed('userPlus', 'newResource'));
 		$this->aclManager->addRole('admin');
 		$this->assertTrue($this->aclManager->isAllowed('admin', 'newResource'));
+	}
+
+	/**
+	 * Tests AclManager::setPermissionLevel()
+	 */
+	public function testSetPermissionLevel() {
+		$this->aclManager->start();
+		$this->aclManager->addPermission('READ', 5);
+		$this->aclManager->addPermission('DELETE', 15);
+		$this->aclManager->addResource('newResource');
+		$this->aclManager->addRole('user');
+
+		$this->assertFalse($this->aclManager->isAllowed('user', '*', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('user', 'newResource', 'READ'));
+
+		$this->aclManager->allow('user', 'newResource', 'READ');
+
+		$this->assertFalse($this->aclManager->isAllowed('user', '*', 'READ'));
+		$this->assertTrue($this->aclManager->isAllowed('user', 'newResource', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('user', 'newResource', 'DELETE'));
+
+		$this->expectException(AclException::class);
+		$this->aclManager->setPermissionLevel('NOT_EXIST', 10);
+
+		$this->aclManager->setPermissionLevel('DELETE', 4);
+		$this->assertTrue($this->aclManager->isAllowed('user', 'newResource', 'DELETE'));
 	}
 }
 

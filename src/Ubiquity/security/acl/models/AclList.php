@@ -175,6 +175,11 @@ class AclList {
 		$this->permissions[$permission->getName()] = $permission;
 	}
 
+	public function setPermissionLevel(string $name, int $level) {
+		$perm = $this->getPermissionByName($name);
+		$perm->setLevel($level);
+	}
+
 	public function allow(string $roleName, string $resourceName, string $permissionName) {
 		$aclElm = new AclElement();
 		$aclElm->allow($this->getRoleByName($roleName), $this->getResourceByName($resourceName), $this->getPermissionByName($permissionName));
