@@ -23,7 +23,7 @@ class AclManager {
 	 */
 	protected static $aclList;
 
-	public static function start(array $providers) {
+	public static function start(?array $providers = []) {
 		self::$aclList = new AclList();
 		self::$aclList->setProviders($providers);
 		self::$aclList->loadAcls();
