@@ -68,6 +68,7 @@ class AclList {
 		$this->roles[] = new Role('@ALL');
 		$this->resources[] = new Resource('*');
 		$this->permissions[] = new Permission('ALL', 1000);
+		$this->acls = [];
 	}
 
 	public function getRoleByName(string $name) {
