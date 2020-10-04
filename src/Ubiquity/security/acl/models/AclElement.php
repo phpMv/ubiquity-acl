@@ -39,7 +39,7 @@ class AclElement {
 
 	/**
 	 *
-	 * @return Resource
+	 * @return \Ubiquity\security\acl\models\Resource
 	 */
 	public function getResource() {
 		return $this->resource;
