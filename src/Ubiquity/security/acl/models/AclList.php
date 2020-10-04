@@ -2,6 +2,7 @@
 namespace Ubiquity\security\acl\models;
 
 use Ubiquity\security\acl\persistence\AclProviderInterface;
+use Ubiquity\exceptions\AclException;
 
 /**
  * Ubiquity\security\acl\models$AclList
@@ -45,13 +46,22 @@ class AclList {
 
 	protected $elementsCache = [];
 
-	protected function getElementByName(string $name, array $inArray) {
+	protected function getElementByName(string $name, array $inArray, string $type) {
 		foreach ($inArray as $elm) {
 			if ($elm->getName() == $name) {
 				return $elm;
 			}
 		}
-		return null;
+		throw new AclException("$name does not exist in $type ACL");
+	}
+
+	protected function elementExistByName(string $name, array $inArray): bool {
+		foreach ($inArray as $elm) {
+			if ($elm->getName() == $name) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public function init() {
@@ -61,15 +71,15 @@ class AclList {
 	}
 
 	public function getRoleByName(string $name) {
-		return $this->elementsCache["role_$name"] ??= $this->getElementByName($name, $this->roles);
+		return $this->elementsCache["role_$name"] ??= $this->getElementByName($name, $this->roles, 'roles');
 	}
 
 	public function getResourceByName(string $name) {
-		return $this->elementsCache["res_$name"] ??= $this->getElementByName($name, $this->resources);
+		return $this->elementsCache["res_$name"] ??= $this->getElementByName($name, $this->resources, 'resources');
 	}
 
 	public function getPermissionByName(string $name) {
-		return $this->elementsCache["perm_$name"] ??= $this->getElementByName($name, $this->permissions);
+		return $this->elementsCache["perm_$name"] ??= $this->getElementByName($name, $this->permissions, 'permissions');
 	}
 
 	public function loadAcls(): array {
@@ -153,15 +163,15 @@ class AclList {
 	}
 
 	public function addRole(Role $role) {
-		$this->roles[] = $role;
+		$this->roles[$role->getName()] = $role;
 	}
 
 	public function addResource(Resource $resource) {
-		$this->resources[] = $resource;
+		$this->resources[$resource->getName()] = $resource;
 	}
 
 	public function addPermission(Permission $permission) {
-		$this->permissions[] = $permission;
+		$this->permissions[$permission->getName()] = $permission;
 	}
 
 	public function allow(string $roleName, string $resourceName, string $permissionName) {
