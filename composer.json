@@ -1,36 +1,41 @@
 {
-	"name" : "phpmv/ubiquity-acl",
-	"description" : "Access Control Lists for Ubiquity framework",
-	"type" : "extension",
-	"keywords" : [
-		"php",
-		"framework",
-		"mvc",
-		"tools",
-		"devtools",
-		"php-framework",
-		"security",
-		"acl"
-	],
-	"require" : {
-		"php" : "^7.4",
-		"phpmv/ubiquity": "^2.3"
-	},
-	"license" : "Apache-2.0",
-	"authors" : [{
-			"name" : "Jean-Christophe HERON",
-			"email" : "myaddressmail@gmail.com",
-			"role" : "Lead developer"
-		}
-	],
-	"autoload" : {
-		"psr-4" : {
-			"Ubiquity\\" : "src/Ubiquity/"
-		}
-	},
-	"extra" : {
-		"branch-alias" : {
-			"dev-master" : "1.0.x-dev"
-		}
-	}
+    "name": "phpmv/ubiquity-acl",
+    "description": "Access Control Lists for Ubiquity framework",
+    "type": "extension",
+    "keywords": [
+        "php",
+        "framework",
+        "mvc",
+        "tools",
+        "devtools",
+        "php-framework",
+        "security",
+        "acl"
+    ],
+    "require": {
+        "php": "^7.4",
+        "phpmv/ubiquity": "^2.3"
+    },
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Jean-Christophe HERON",
+            "email": "myaddressmail@gmail.com",
+            "role": "Lead developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Ubiquity\\": "src/Ubiquity/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^1.0.0"
+    }
 }
