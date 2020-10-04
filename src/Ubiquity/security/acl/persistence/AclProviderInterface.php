@@ -8,14 +8,14 @@ use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\Resource;
 
 /**
- * Ubiquity\security\acl\persistence$AclLoaderInterface
+ * Ubiquity\security\acl\persistence$AclProviderInterface
  * This class is part of Ubiquity
  *
  * @author jc
  * @version 1.0.0
  *
  */
-interface AclLoaderInterface {
+interface AclProviderInterface {
 
 	/**
 	 *

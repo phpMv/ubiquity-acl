@@ -11,6 +11,28 @@ namespace Ubiquity\security\acl\models;
  */
 class Role extends AbstractAclPart {
 
+	public function __construct(?string $name = null, ?array $parents = []) {
+		parent::__construct($name);
+		$this->parents = $parents;
+	}
+
 	protected $parents = [];
+
+	/**
+	 *
+	 * @return Ambigous <multitype:, unknown>
+	 */
+	public function getParents() {
+		return $this->parents;
+	}
+
+	/**
+	 *
+	 * @param
+	 *        	Ambigous <multitype:, unknown> $parents
+	 */
+	public function setParents($parents) {
+		$this->parents = $parents;
+	}
 }
 

@@ -13,6 +13,11 @@ class Resource extends AbstractAclPart {
 
 	protected $value;
 
+	public function __construct(?string $name = null, ?string $value = null) {
+		parent::__construct($name);
+		$this->value = $value;
+	}
+
 	/**
 	 *
 	 * @return mixed

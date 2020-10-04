@@ -7,14 +7,14 @@ use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
 
 /**
- * Ubiquity\security\acl\persistence$AclArrayLoader
+ * Ubiquity\security\acl\persistence$AclArrayProvider
  * This class is part of Ubiquity
  *
  * @author jc
  * @version 1.0.0
  *
  */
-abstract class AclArrayLoader implements AclLoaderInterface {
+abstract class AclArrayProvider implements AclProviderInterface {
 
 	protected $aclsArray;
 
@@ -27,7 +27,7 @@ abstract class AclArrayLoader implements AclLoaderInterface {
 		foreach ($this->parts[$class] as $partArray) {
 			$elm = new $class();
 			$elm->fromArray($partArray);
-			$elements[] = $elm;
+			$elements[$partArray['name']] = $elm;
 		}
 		return $elements;
 	}
@@ -38,7 +38,13 @@ abstract class AclArrayLoader implements AclLoaderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllAcls()
 	 */
 	public function loadAllAcls() {
-		return DAO::getAll(AclElement::class);
+		$acls = [];
+		foreach ($this->aclsArray as $aclArray) {
+			$aclElement = new AclElement();
+			$aclElement->fromArray($aclArray);
+			$acls[] = $aclElement;
+		}
+		return $acls;
 	}
 
 	/**
@@ -47,11 +53,7 @@ abstract class AclArrayLoader implements AclLoaderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::saveAcl()
 	 */
 	public function saveAcl(AclElement $aclElement) {
-		$this->aclsArray[] = [
-			'resource' => $aclElement->getResource(),
-			'role' => $aclElement->getRole(),
-			'permission' => $aclElement->getPermission()
-		];
+		$this->aclsArray[] = $aclElement->toArray();
 	}
 
 	/**

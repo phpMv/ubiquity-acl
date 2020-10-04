@@ -13,6 +13,11 @@ class Permission extends AbstractAclPart {
 
 	protected $level;
 
+	public function __construct(?string $name = null, int $level = 0) {
+		parent::__construct($name);
+		$this->level = $level;
+	}
+
 	/**
 	 *
 	 * @return mixed

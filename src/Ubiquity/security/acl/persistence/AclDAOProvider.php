@@ -8,14 +8,14 @@ use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
 
 /**
- * Ubiquity\security\acl\persistence$AclDAOLoader
+ * Ubiquity\security\acl\persistence$AclDAOProvider
  * This class is part of Ubiquity
  *
  * @author jc
  * @version 1.0.0
  *
  */
-class AclDAOLoader implements AclLoaderInterface {
+class AclDAOProvider implements AclLoaderInterface {
 
 	public function __construct($dbOffset = 'default') {
 		DAO::setModelDatabase(AclElement::class, $dbOffset);
