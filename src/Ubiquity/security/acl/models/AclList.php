@@ -116,7 +116,7 @@ class AclList {
 
 	/**
 	 *
-	 * @return multitype:\Ubiquity\security\acl\models\AclElement
+	 * @return AclElement[]
 	 */
 	public function getAcls() {
 		return $this->acls;
@@ -124,7 +124,7 @@ class AclList {
 
 	/**
 	 *
-	 * @return multitype:\Ubiquity\security\acl\models\Role
+	 * @return Role[]
 	 */
 	public function getRoles() {
 		return $this->roles;
@@ -132,7 +132,7 @@ class AclList {
 
 	/**
 	 *
-	 * @return multitype:Resource
+	 * @return Resource[]
 	 */
 	public function getResources() {
 		return $this->resources;
@@ -140,7 +140,7 @@ class AclList {
 
 	/**
 	 *
-	 * @return multitype:\Ubiquity\security\acl\models\Permission
+	 * @return Permission[]
 	 */
 	public function getPermissions() {
 		return $this->permissions;
@@ -148,7 +148,7 @@ class AclList {
 
 	/**
 	 *
-	 * @return multitype:\Ubiquity\security\acl\persistence\AclLoaderInterface
+	 * @return AclLoaderInterface[}
 	 */
 	public function getProviders() {
 		return $this->providers;
@@ -156,7 +156,7 @@ class AclList {
 
 	/**
 	 *
-	 * @param multitype:\Ubiquity\security\acl\persistence\AclLoaderInterface $providers
+	 * @param AclLoaderInterface[] $providers
 	 */
 	public function setProviders($providers) {
 		$this->providers = $providers;

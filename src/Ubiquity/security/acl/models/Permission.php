@@ -11,6 +11,10 @@ namespace Ubiquity\security\acl\models;
  */
 class Permission extends AbstractAclPart {
 
+	/**
+	 *
+	 * @var int
+	 */
 	protected $level;
 
 	public function __construct(?string $name = null, int $level = 0) {
@@ -20,7 +24,7 @@ class Permission extends AbstractAclPart {
 
 	/**
 	 *
-	 * @return mixed
+	 * @return int
 	 */
 	public function getLevel() {
 		return $this->level;
@@ -28,9 +32,9 @@ class Permission extends AbstractAclPart {
 
 	/**
 	 *
-	 * @param mixed $level
+	 * @param int $level
 	 */
-	public function setLevel($level) {
+	public function setLevel(int $level) {
 		$this->level = $level;
 	}
 }

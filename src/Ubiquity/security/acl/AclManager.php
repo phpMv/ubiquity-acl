@@ -65,7 +65,7 @@ class AclManager {
 	 * @param string $permission
 	 */
 	public static function allow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
-		self::$aclList->allow($role, $resource, $permission);
+		self::$aclList->allow($role, $resource ?? '*', $permission ?? 'ALL');
 	}
 
 	/**
@@ -77,7 +77,7 @@ class AclManager {
 	 * @return bool
 	 */
 	public static function isAllowed(string $role, ?string $resource = '*', ?string $permission = 'ALL'): bool {
-		return self::$aclList->isAllowed($role, $resource, $permission);
+		return self::$aclList->isAllowed($role, $resource ?? '*', $permission ?? 'ALL');
 	}
 }
 

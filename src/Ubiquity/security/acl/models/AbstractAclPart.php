@@ -11,6 +11,10 @@ namespace Ubiquity\security\acl\models;
  */
 abstract class AbstractAclPart {
 
+	/**
+	 *
+	 * @var string
+	 */
 	protected $name;
 
 	public function __construct(?string $name = null) {
@@ -27,7 +31,7 @@ abstract class AbstractAclPart {
 
 	/**
 	 *
-	 * @param mixed $name
+	 * @param string $name
 	 */
 	public function setName($name) {
 		$this->name = $name;

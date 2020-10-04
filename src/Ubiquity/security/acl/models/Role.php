@@ -16,11 +16,15 @@ class Role extends AbstractAclPart {
 		$this->parents = $parents;
 	}
 
+	/**
+	 *
+	 * @var array
+	 */
 	protected $parents = [];
 
 	/**
 	 *
-	 * @return Ambigous <multitype:, unknown>
+	 * @return array
 	 */
 	public function getParents() {
 		return $this->parents;
@@ -28,10 +32,9 @@ class Role extends AbstractAclPart {
 
 	/**
 	 *
-	 * @param
-	 *        	Ambigous <multitype:, unknown> $parents
+	 * @param array $parents
 	 */
-	public function setParents($parents) {
+	public function setParents(array $parents) {
 		$this->parents = $parents;
 	}
 }
