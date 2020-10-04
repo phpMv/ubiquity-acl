@@ -16,7 +16,7 @@ use Ubiquity\security\acl\models\Role;
  * @version 1.0.0
  *
  */
-class AclDAOProvider implements AclLoaderInterface {
+class AclDAOProvider implements AclProviderInterface {
 
 	public function __construct($dbOffset = 'default') {
 		DAO::setModelDatabase(AclElement::class, $dbOffset);

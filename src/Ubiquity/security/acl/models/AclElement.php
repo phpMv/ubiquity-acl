@@ -17,7 +17,7 @@ class AclElement {
 
 	/**
 	 *
-	 * @var Resource
+	 * @var \Ubiquity\security\acl\models\Resource
 	 */
 	protected $resource;
 

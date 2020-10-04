@@ -28,7 +28,7 @@ class AclList {
 
 	/**
 	 *
-	 * @var Resource[]
+	 * @var \Ubiquity\security\acl\models\Resource[]
 	 */
 	protected $resources;
 
@@ -132,7 +132,7 @@ class AclList {
 
 	/**
 	 *
-	 * @return Resource[]
+	 * @return \Ubiquity\security\acl\models\Resource[]
 	 */
 	public function getResources() {
 		return $this->resources;
@@ -148,7 +148,7 @@ class AclList {
 
 	/**
 	 *
-	 * @return AclLoaderInterface[}
+	 * @return AclLoaderInterface[]
 	 */
 	public function getProviders() {
 		return $this->providers;
