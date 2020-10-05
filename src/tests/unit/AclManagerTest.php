@@ -39,10 +39,12 @@ class AclManagerTest extends \Codeception\Test\Unit {
 	 */
 	public function testAddRole() {
 		$this->aclManager->start();
+		$this->assertEquals(1, count($this->aclManager->getRoles()));
 		$this->expectException(AclException::class);
 		$this->aclManager->isAllowed('newRole');
 
 		$this->aclManager->addRole('newRole');
+		$this->assertEquals(2, count($this->aclManager->getRoles()));
 		$this->assertFalse($this->aclManager->isAllowed('newRole'));
 	}
 
@@ -51,7 +53,9 @@ class AclManagerTest extends \Codeception\Test\Unit {
 	 */
 	public function testAddResource() {
 		$this->aclManager->start();
+		$this->assertEquals(1, count($this->aclManager->getResources()));
 		$this->aclManager->addResource('newResource');
+		$this->assertEquals(2, count($this->aclManager->getResources()));
 		$this->assertFalse($this->aclManager->isAllowed('@ALL', 'newResource'));
 	}
 
@@ -61,11 +65,14 @@ class AclManagerTest extends \Codeception\Test\Unit {
 	public function testAddPermission() {
 		$this->aclManager->start();
 		$this->aclManager->allow('@ALL');
+		$this->assertEquals(1, count($this->aclManager->getPermissions()));
+
 		$this->expectException(AclException::class);
 		$this->aclManager->isAllowed('@ALL', '*', 'READ');
 
 		$this->aclManager->addPermission('READ');
 		$this->assertTrue($this->aclManager->isAllowed('@ALL', '*', 'READ'));
+		$this->assertEquals(2, count($this->aclManager->getPermissions()));
 	}
 
 	/**
@@ -82,7 +89,11 @@ class AclManagerTest extends \Codeception\Test\Unit {
 		$this->assertFalse($this->aclManager->isAllowed('user', '*', 'READ'));
 		$this->assertFalse($this->aclManager->isAllowed('user', 'newResource', 'READ'));
 
+		$this->assertEquals(0, count($this->aclManager->getAcls()));
+
 		$this->aclManager->allow('user', 'newResource', 'READ');
+
+		$this->assertEquals(1, count($this->aclManager->getAcls()));
 
 		$this->assertFalse($this->aclManager->isAllowed('user', '*', 'READ'));
 		$this->assertTrue($this->aclManager->isAllowed('user', 'newResource', 'READ'));
