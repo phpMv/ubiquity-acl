@@ -61,6 +61,22 @@ class AclManager {
 		self::$aclList->setPermissionLevel($name, $level);
 	}
 
+	public static function getRoles() {
+		return self::$aclList->getRoles();
+	}
+
+	public static function getResources() {
+		return self::$aclList->getResources();
+	}
+
+	public static function getPermissions() {
+		return self::$aclList->getPermissions();
+	}
+
+	public static function getAcls() {
+		return self::$aclList->getAcls();
+	}
+
 	/**
 	 * Allow role to access to resource with the permission.
 	 *

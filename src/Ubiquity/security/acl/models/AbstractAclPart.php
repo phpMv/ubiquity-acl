@@ -13,6 +13,13 @@ abstract class AbstractAclPart {
 
 	/**
 	 *
+	 * @id
+	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
+	 */
+	protected $id;
+
+	/**
+	 *
 	 * @var string
 	 */
 	protected $name;
@@ -45,6 +52,22 @@ abstract class AbstractAclPart {
 		foreach ($values as $k => $v) {
 			$this->$k = $v;
 		}
+	}
+
+	/**
+	 *
+	 * @return mixed
+	 */
+	public function getId() {
+		return $this->id;
+	}
+
+	/**
+	 *
+	 * @param mixed $id
+	 */
+	public function setId($id) {
+		$this->id = $id;
 	}
 }
 

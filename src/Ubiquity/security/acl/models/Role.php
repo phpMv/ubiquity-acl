@@ -11,20 +11,20 @@ namespace Ubiquity\security\acl\models;
  */
 class Role extends AbstractAclPart {
 
-	public function __construct(?string $name = null, ?array $parents = []) {
+	public function __construct(?string $name = null, $parents = '') {
 		parent::__construct($name);
-		$this->parents = $parents;
+		$this->setParents($parents);
 	}
 
 	/**
 	 *
-	 * @var array
+	 * @var string
 	 */
-	protected $parents = [];
+	protected $parents = '';
 
 	/**
 	 *
-	 * @return array
+	 * @return string
 	 */
 	public function getParents() {
 		return $this->parents;
@@ -32,9 +32,20 @@ class Role extends AbstractAclPart {
 
 	/**
 	 *
-	 * @param array $parents
+	 * @return array
 	 */
-	public function setParents(array $parents) {
+	public function getParentsArray() {
+		return \explode(',', $this->parents);
+	}
+
+	/**
+	 *
+	 * @param array|string $parents
+	 */
+	public function setParents($parents) {
+		if (\is_array($parents)) {
+			$parents = \implode(',', $parents);
+		}
 		$this->parents = $parents;
 	}
 }

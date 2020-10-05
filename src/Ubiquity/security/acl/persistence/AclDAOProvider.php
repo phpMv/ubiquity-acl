@@ -18,26 +18,46 @@ use Ubiquity\security\acl\models\Role;
  */
 class AclDAOProvider implements AclProviderInterface {
 
-	public function __construct($dbOffset = 'default') {
-		DAO::setModelDatabase(AclElement::class, $dbOffset);
-		DAO::setModelDatabase(Resource::class, $dbOffset);
-		DAO::setModelDatabase(Role::class, $dbOffset);
-		DAO::setModelDatabase(Permission::class, $dbOffset);
-	}
+	protected $aclClass;
+
+	protected $RoleClass;
+
+	protected $permissionClass;
+
+	protected $resourceClass;
 
 	/**
 	 *
-	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllAcls()
+	 * @param array $classes
+	 *        	associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
 	 */
-	public function loadAllAcls() {
-		return DAO::getAll(AclElement::class);
+	public function __construct($classes = []) {
+		$this->aclClass = $classes['acl'] ?? AclElement::class;
+		$this->RoleClass = $classes['role'] ?? Role::class;
+		$this->resourceClass = $classes['resource'] ?? Resource::class;
+		$this->permissionClass = $classes['permission'] ?? Permission::class;
+	}
+
+	public function setDbOffset($dbOffset = 'default') {
+		DAO::setModelDatabase($this->aclClass, $dbOffset);
+		DAO::setModelDatabase($this->resourceClass, $dbOffset);
+		DAO::setModelDatabase($this->RoleClass, $dbOffset);
+		DAO::setModelDatabase($this->permissionClass, $dbOffset);
 	}
 
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::saveAcl()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllAcls()
+	 */
+	public function loadAllAcls(): array {
+		return DAO::getAll($this->aclClass);
+	}
+
+	/**
+	 *
+	 * {@inheritdoc}
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::saveAcl()
 	 */
 	public function saveAcl(AclElement $aclElement) {
 		return DAO::save($aclElement);
@@ -55,34 +75,34 @@ class AclDAOProvider implements AclProviderInterface {
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllPermissions()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllPermissions()
 	 */
 	public function loadAllPermissions(): array {
-		return $this->loadElements(Permission::class);
+		return $this->loadElements($this->permissionClass);
 	}
 
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllResources()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllResources()
 	 */
 	public function loadAllResources(): array {
-		return $this->loadElements(Resource::class);
+		return $this->loadElements($this->resourceClass);
 	}
 
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllRoles()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllRoles()
 	 */
 	public function loadAllRoles(): array {
-		return $this->loadElements(Role::class);
+		return $this->loadElements($this->RoleClass);
 	}
 
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::savePart()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::savePart()
 	 */
 	public function savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		return DAO::save($part);

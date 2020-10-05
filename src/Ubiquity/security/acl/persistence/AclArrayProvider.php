@@ -35,7 +35,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllAcls()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllAcls()
 	 */
 	public function loadAllAcls() {
 		$acls = [];
@@ -50,7 +50,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::saveAcl()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::saveAcl()
 	 */
 	public function saveAcl(AclElement $aclElement) {
 		$this->aclsArray[] = $aclElement->toArray();
@@ -59,7 +59,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllPermissions()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllPermissions()
 	 */
 	public function loadAllPermissions(): array {
 		return $this->loadAllPart(Permission::class);
@@ -68,7 +68,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllResources()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllResources()
 	 */
 	public function loadAllResources(): array {
 		return $this->loadAllPart(Resource::class);
@@ -77,7 +77,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::loadAllRoles()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllRoles()
 	 */
 	public function loadAllRoles(): array {
 		return $this->loadAllPart(Role::class);
@@ -86,7 +86,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	/**
 	 *
 	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclLoaderInterface::savePart()
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::savePart()
 	 */
 	public function savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		$class = \get_class($part);

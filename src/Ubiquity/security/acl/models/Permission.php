@@ -14,6 +14,7 @@ class Permission extends AbstractAclPart {
 	/**
 	 *
 	 * @var int
+	 * @column("name"=>"level","dbType"=>"int(11)")
 	 */
 	protected $level;
 

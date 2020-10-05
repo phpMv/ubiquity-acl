@@ -40,7 +40,7 @@ class AclList {
 
 	/**
 	 *
-	 * @var AclLoaderInterface[]
+	 * @var AclProviderInterface[]
 	 */
 	protected $providers;
 
@@ -149,7 +149,7 @@ class AclList {
 
 	/**
 	 *
-	 * @return AclLoaderInterface[]
+	 * @return AclProviderInterface[]
 	 */
 	public function getProviders() {
 		return $this->providers;
@@ -157,7 +157,7 @@ class AclList {
 
 	/**
 	 *
-	 * @param AclLoaderInterface[] $providers
+	 * @param AclProviderInterface[] $providers
 	 */
 	public function setProviders($providers) {
 		$this->providers = $providers;
@@ -188,7 +188,7 @@ class AclList {
 
 	public function getRolePermissionsOn(string $roleName, $resourceName = '*'): array {
 		$role = $this->getRoleByName($roleName);
-		$parents = $role->getParents();
+		$parents = $role->getParentsArray();
 		$result = [];
 		foreach ($this->acls as $aclElement) {
 			$aclRoleName = $aclElement->getRole()->getName();
