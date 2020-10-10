@@ -42,7 +42,7 @@ class AclList {
 	 *
 	 * @var AclProviderInterface[]
 	 */
-	protected $providers;
+	protected $providers = [];
 
 	protected $elementsCache = [];
 
@@ -65,9 +65,9 @@ class AclList {
 	}
 
 	public function init() {
-		$this->roles[] = new Role('@ALL');
-		$this->resources[] = new Resource('*');
-		$this->permissions[] = new Permission('ALL', 1000);
+		$this->roles['role_@ALL'] = new Role('@ALL');
+		$this->resources['res_*'] = new Resource('*');
+		$this->permissions['perm_ALL'] = new Permission('ALL', 1000);
 		$this->acls = [];
 	}
 
