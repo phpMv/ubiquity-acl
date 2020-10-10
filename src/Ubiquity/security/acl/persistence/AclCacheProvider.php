@@ -50,13 +50,10 @@ class AclCacheProvider extends AclArrayProvider {
 
 	public function savePart(AbstractAclPart $part) {
 		$this->_savePart($part);
-		$class = get_class($part);
-		CacheManager::$cache->store($this->getRootKey($class), $this->parts[$class]);
 	}
 
 	public function saveAcl(AclElement $aclElement) {
 		$this->_saveAcl($aclElement);
-		CacheManager::$cache->store($this->getRootKey('acls'), $this->aclsArray);
 	}
 
 	public function isAutosave(): bool {

@@ -165,17 +165,17 @@ class AclList {
 
 	public function addRole(Role $role) {
 		$this->roles[$role->getName()] = $role;
-		$this->savePart($role, true);
+		$this->savePart($role);
 	}
 
 	public function addResource(Resource $resource) {
 		$this->resources[$resource->getName()] = $resource;
-		$this->savePart($resource, true);
+		$this->savePart($resource);
 	}
 
 	public function addPermission(Permission $permission) {
 		$this->permissions[$permission->getName()] = $permission;
-		$this->savePart($permission, true);
+		$this->savePart($permission);
 	}
 
 	public function setPermissionLevel(string $name, int $level) {
@@ -187,7 +187,7 @@ class AclList {
 		$aclElm = new AclElement();
 		$aclElm->allow($this->getRoleByName($roleName), $this->getResourceByName($resourceName), $this->getPermissionByName($permissionName));
 		$this->acls[] = $aclElm;
-		$this->saveAclElement($aclElm, true);
+		$this->saveAclElement($aclElm);
 	}
 
 	public function getRolePermissionsOn(string $roleName, $resourceName = '*'): array {
@@ -223,19 +223,15 @@ class AclList {
 		return false;
 	}
 
-	public function saveAclElement(AclElement $aclElement, bool $autosave = false) {
+	public function saveAclElement(AclElement $aclElement) {
 		foreach ($this->providers as $provider) {
-			if (! $autosave || $provider->isAutosave()) {
-				$provider->saveAcl($aclElement);
-			}
+			$provider->saveAcl($aclElement);
 		}
 	}
 
-	public function savePart(AbstractAclPart $aclPart, bool $autosave = false) {
+	public function savePart(AbstractAclPart $aclPart) {
 		foreach ($this->providers as $provider) {
-			if (! $autosave || $provider->isAutosave()) {
-				$provider->savePart($aclPart);
-			}
+			$provider->savePart($aclPart);
 		}
 	}
 

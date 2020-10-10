@@ -42,13 +42,13 @@ abstract class AclArrayProvider implements AclProviderInterface {
 		foreach ($this->aclsArray as $aclArray) {
 			$aclElement = new AclElement();
 			$aclElement->fromArray($aclArray);
-			$acls[] = $aclElement;
+			$acls[$aclElement->getId_()] = $aclElement;
 		}
 		return $acls;
 	}
 
 	protected function _saveAcl(AclElement $aclElement) {
-		$this->aclsArray[] = $aclElement->toArray();
+		$this->aclsArray[$aclElement->getId_()] = $aclElement->toArray();
 	}
 
 	/**
@@ -80,7 +80,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 
 	protected function _savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		$class = \get_class($part);
-		$this->parts[$class][] = $part->toArray();
+		$this->parts[$class][$part->getName()] = $part->toArray();
 	}
 }
 

@@ -124,5 +124,19 @@ class AclElement {
 	public function setResource($resource) {
 		$this->resource = $resource;
 	}
+
+	public function getId_() {
+		$id = '';
+		if (isset($this->role)) {
+			$id = $this->role->getName();
+		}
+		if (isset($this->resource)) {
+			$id .= $this->resource->getName();
+		}
+		if (isset($this->permission)) {
+			$id .= $this->permission->getName();
+		}
+		return \crc32($id) . '.';
+	}
 }
 
