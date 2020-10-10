@@ -9,7 +9,7 @@ coverage:
 settings:
     shuffle: true
     lint: true
-    bootstrap: tests/_bootstrap.php
+    bootstrap: unit/_bootstrap.php
 paths:
     tests: tests
     output: tests/_output
