@@ -37,7 +37,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	 * {@inheritdoc}
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllAcls()
 	 */
-	public function loadAllAcls() {
+	public function loadAllAcls(): array {
 		$acls = [];
 		foreach ($this->aclsArray as $aclArray) {
 			$aclElement = new AclElement();
@@ -47,12 +47,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 		return $acls;
 	}
 
-	/**
-	 *
-	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::saveAcl()
-	 */
-	public function saveAcl(AclElement $aclElement) {
+	protected function _saveAcl(AclElement $aclElement) {
 		$this->aclsArray[] = $aclElement->toArray();
 	}
 
@@ -83,12 +78,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 		return $this->loadAllPart(Role::class);
 	}
 
-	/**
-	 *
-	 * {@inheritdoc}
-	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::savePart()
-	 */
-	public function savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
+	protected function _savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		$class = \get_class($part);
 		$this->parts[$class][] = $part->toArray();
 	}

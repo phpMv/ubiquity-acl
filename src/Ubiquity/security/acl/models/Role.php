@@ -35,7 +35,7 @@ class Role extends AbstractAclPart {
 	 * @return array
 	 */
 	public function getParentsArray() {
-		return ($this->parents == null) ? [] : \explode(',', $this->parents);
+		return \explode(',', $this->parents);
 	}
 
 	/**

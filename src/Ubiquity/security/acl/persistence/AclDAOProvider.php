@@ -107,5 +107,11 @@ class AclDAOProvider implements AclProviderInterface {
 	public function savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		return DAO::save($part);
 	}
+
+	public function isAutosave(): bool {
+		return true;
+	}
+
+	public function saveAll(): void {}
 }
 

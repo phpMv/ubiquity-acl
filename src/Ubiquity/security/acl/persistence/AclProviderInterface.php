@@ -44,5 +44,9 @@ interface AclProviderInterface {
 	public function saveAcl(AclElement $aclElement);
 
 	public function savePart(AbstractAclPart $part);
+
+	public function isAutosave(): bool;
+
+	public function saveAll(): void;
 }
 

@@ -39,10 +39,12 @@ class AclManager {
 	 */
 	public static function initFromProviders(?array $providers = []): void {
 		self::$aclList->setProviders($providers);
-		self::$aclList->loadAcls();
-		self::$aclList->loadRoles();
-		self::$aclList->loadResources();
-		self::$aclList->loadPermissions();
+		if (\count($providers) > 0) {
+			self::$aclList->loadAcls();
+			self::$aclList->loadRoles();
+			self::$aclList->loadResources();
+			self::$aclList->loadPermissions();
+		}
 	}
 
 	public static function addRole(string $name, ?array $parents = []) {
@@ -98,6 +100,10 @@ class AclManager {
 	 */
 	public static function isAllowed(string $role, ?string $resource = '*', ?string $permission = 'ALL'): bool {
 		return self::$aclList->isAllowed($role, $resource ?? '*', $permission ?? 'ALL');
+	}
+
+	public static function saveAll() {
+		self::$aclList->saveAll();
 	}
 }
 
