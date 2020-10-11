@@ -1,6 +1,6 @@
 <?php
 if (! defined('ROOT')) {
-	define('ROOT', 'src/tests/unit/');
+	define('ROOT', '/home/scrutinizer/build/src/tests/unit/');
 }
 if (! defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
