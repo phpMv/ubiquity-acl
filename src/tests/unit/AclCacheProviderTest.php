@@ -17,27 +17,32 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			]
 		];
 		CacheManager::startProd($config);
+		AclManager::start();
+		AclManager::initFromProviders([
+			new AclCacheProvider()
+		]);
 	}
 
 	/**
 	 * Tests AclCacheProvider->loadAllAcls()
 	 */
 	public function testLoadAllAcls() {
-		AclManager::start();
-		AclManager::initFromProviders([
-			new AclCacheProvider()
-		]);
 		$this->assertEquals(1, \count(AclManager::getAcls()));
+		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'READ'));
+		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
+		AclManager::allow('USER', 'HOME', 'WRITE');
+		$this->assertEquals(2, \count(AclManager::getAcls()));
+		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'WRITE'));
 	}
 
 	/**
 	 * Tests AclCacheProvider->savePart()
 	 */
 	public function testSavePart() {
-		// TODO Auto-generated AclCacheProviderTest->testSavePart()
-		$this->markTestIncomplete("savePart test not implemented");
-
-		$this->aclCacheProvider->savePart(/* parameters */);
+		AclManager::addRole('TESTER', [
+			'USER'
+		]);
+		$this->assertTrue(AclManager::isAllowed('TESTER', 'Home', 'WRITE'));
 	}
 
 	/**
