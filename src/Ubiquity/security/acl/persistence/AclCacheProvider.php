@@ -13,7 +13,7 @@ class AclCacheProvider extends AclArrayProvider {
 	private $key = 'acls/';
 
 	private function getRootKey($element) {
-		return $this->key . $element;
+		return $this->key . \md5($element);
 	}
 
 	public function __construct() {
