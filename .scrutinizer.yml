@@ -14,7 +14,11 @@ build:
       environment:
         php:
           version: 7.4
+      services:
+          mysql: 5.7
       tests:
+        before:
+          - mysql -u root mysql < src/tests/unit/db/acls.sql
         override:
           - command: (cd src/ && ./../vendor/bin/codecept build && ./../vendor/bin/codecept run --coverage-xml -v)
             coverage:
