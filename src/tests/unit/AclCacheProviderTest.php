@@ -30,7 +30,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals(1, \count(AclManager::getAcls()));
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'READ'));
 		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
-		AclManager::allow('USER', 'HOME', 'WRITE');
+		AclManager::allow('USER', 'Home', 'WRITE');
 		$this->assertEquals(2, \count(AclManager::getAcls()));
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'WRITE'));
 	}
@@ -42,7 +42,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::addRole('TESTER', [
 			'USER'
 		]);
-		$this->assertTrue(AclManager::isAllowed('TESTER', 'Home', 'WRITE'));
+		$this->assertTrue(AclManager::isAllowed('TESTER', 'Home', 'READ'));
 	}
 
 	/**
@@ -59,10 +59,16 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 	 * Tests AclCacheProvider->saveAll()
 	 */
 	public function testSaveAll() {
-		// TODO Auto-generated AclCacheProviderTest->testSaveAll()
-		$this->markTestIncomplete("saveAll test not implemented");
-
-		$this->aclCacheProvider->saveAll(/* parameters */);
+		AclManager::addPermission('DELETE', 5);
+		AclManager::saveAll();
+		AclManager::start();
+		AclManager::initFromProviders([
+			new AclCacheProvider()
+		]);
+		$this->assertEquals(4, count(AclManager::getPermissions()));
+		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'DELETE'));
+		AclManager::setPermissionLevel('DELETE', 0);
+		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'DELETE'));
 	}
 }
 

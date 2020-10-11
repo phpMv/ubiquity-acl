@@ -9,12 +9,12 @@ coverage:
 settings:
     shuffle: true
     lint: true
-    bootstrap: unit/_bootstrap.php
 paths:
     tests: tests
     output: tests/_output
     support: tests/_support
     data: tests
+bootstrap: unit/_bootstrap.php
 reporters:
     xml: Codeception\PHPUnit\Log\JUnit
     html: Codeception\PHPUnit\ResultPrinter\HTML
