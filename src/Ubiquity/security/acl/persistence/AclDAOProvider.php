@@ -105,7 +105,16 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::savePart()
 	 */
 	public function savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
-		return DAO::save($part);
+		return DAO::insert($part);
+	}
+
+	/**
+	 *
+	 * {@inheritdoc}
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::updatePart()
+	 */
+	public function updatePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
+		return DAO::update($part);
 	}
 
 	public function isAutosave(): bool {

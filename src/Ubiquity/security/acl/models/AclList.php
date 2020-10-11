@@ -181,6 +181,7 @@ class AclList {
 	public function setPermissionLevel(string $name, int $level) {
 		$perm = $this->getPermissionByName($name);
 		$perm->setLevel($level);
+		$this->updatePart($perm);
 	}
 
 	public function allow(string $roleName, string $resourceName, string $permissionName) {
@@ -232,6 +233,12 @@ class AclList {
 	public function savePart(AbstractAclPart $aclPart) {
 		foreach ($this->providers as $provider) {
 			$provider->savePart($aclPart);
+		}
+	}
+
+	public function updatePart(AbstractAclPart $aclPart) {
+		foreach ($this->providers as $provider) {
+			$provider->updatePart($aclPart);
 		}
 	}
 

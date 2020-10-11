@@ -52,6 +52,10 @@ class AclCacheProvider extends AclArrayProvider {
 		$this->_savePart($part);
 	}
 
+	public function updatePart(AbstractAclPart $part) {
+		$this->_updatePart($part);
+	}
+
 	public function saveAcl(AclElement $aclElement) {
 		$this->_saveAcl($aclElement);
 	}
