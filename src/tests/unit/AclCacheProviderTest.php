@@ -28,6 +28,9 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 	 */
 	public function testLoadAllAcls() {
 		$this->assertEquals(1, \count(AclManager::getAcls()));
+		$this->assertEquals(3, count(AclManager::getRoles()));
+		$this->assertEquals(3, count(AclManager::getPermissions()));
+		$this->assertEquals(3, count(AclManager::getResources()));
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'READ'));
 		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
 		AclManager::allow('USER', 'Home', 'WRITE');
