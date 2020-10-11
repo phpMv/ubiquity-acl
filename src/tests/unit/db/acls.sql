@@ -30,13 +30,6 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Déchargement des données de la table `aclelement`
---
-
-INSERT INTO `AclElement` (`id`, `idRole`, `idPermission`, `idResource`) VALUES
-(1, 1, 1, 1);
-
---
 -- Déchargement des données de la table `permission`
 --
 
@@ -59,6 +52,14 @@ INSERT INTO `Resource` (`value`, `id`, `name`) VALUES
 INSERT INTO `Role` (`parents`, `id`, `name`) VALUES
 ('', 1, 'USER'),
 ('USER', 2, 'ADMIN');
+
+--
+-- Déchargement des données de la table `aclelement`
+--
+
+INSERT INTO `AclElement` (`id`, `idRole`, `idPermission`, `idResource`) VALUES
+(1, 1, 1, 1);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
