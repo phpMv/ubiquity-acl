@@ -2,6 +2,8 @@
 use Ubiquity\security\acl\persistence\AclDAOProvider;
 use Ubiquity\cache\CacheManager;
 use Ubiquity\security\acl\AclManager;
+use Ubiquity\controllers\Startup;
+use Ubiquity\orm\DAO;
 
 /**
  * AclDAOProvider test case.
@@ -30,6 +32,13 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 			]
 		];
 		CacheManager::startProd($config);
+		Startup::$config = $config;
+		DAO::setModelsDatabases([
+			\models\acls\Aclelement::class => 'acls',
+			\models\acls\Role::class => 'acls',
+			\models\acls\Resource::class => 'acls',
+			\models\acls\Permission::class => 'acls'
+		]);
 		AclManager::start();
 		AclManager::initFromProviders([
 			new AclDAOProvider([
