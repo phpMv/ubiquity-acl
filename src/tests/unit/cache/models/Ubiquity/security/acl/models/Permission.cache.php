@@ -1,0 +1,2 @@
+<?php
+return array("#tableName"=>"Permission","#primaryKeys"=>array("id"=>"id"),"#manyToOne"=>array(),"#fieldNames"=>array("level"=>"level","id"=>"id","name"=>"name"),"#memberNames"=>array("level"=>"level","id"=>"id","name"=>"name"),"#fieldTypes"=>array("level"=>"int(11)","id"=>"int(11)","name"=>"mixed"),"#nullable"=>array(),"#notSerializable"=>array(),"#transformers"=>array(),"#accessors"=>array("level"=>"setLevel","id"=>"setId","name"=>"setName"));

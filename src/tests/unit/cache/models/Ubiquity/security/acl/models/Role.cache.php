@@ -1,0 +1,2 @@
+<?php
+return array("#tableName"=>"Role","#primaryKeys"=>array("id"=>"id"),"#manyToOne"=>array(),"#fieldNames"=>array("parents"=>"parents","id"=>"id","name"=>"name"),"#memberNames"=>array("parents"=>"parents","id"=>"id","name"=>"name"),"#fieldTypes"=>array("parents"=>"mixed","id"=>"int(11)","name"=>"mixed"),"#nullable"=>array(),"#notSerializable"=>array(),"#transformers"=>array(),"#accessors"=>array("parents"=>"setParents","id"=>"setId","name"=>"setName"));

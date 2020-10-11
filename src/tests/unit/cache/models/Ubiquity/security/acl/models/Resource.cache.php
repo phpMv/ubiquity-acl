@@ -1,0 +1,2 @@
+<?php
+return array("#tableName"=>"Resource","#primaryKeys"=>array("id"=>"id"),"#manyToOne"=>array(),"#fieldNames"=>array("value"=>"value","id"=>"id","name"=>"name"),"#memberNames"=>array("value"=>"value","id"=>"id","name"=>"name"),"#fieldTypes"=>array("value"=>"mixed","id"=>"int(11)","name"=>"mixed"),"#nullable"=>array(),"#notSerializable"=>array(),"#transformers"=>array(),"#accessors"=>array("value"=>"setValue","id"=>"setId","name"=>"setName"));
