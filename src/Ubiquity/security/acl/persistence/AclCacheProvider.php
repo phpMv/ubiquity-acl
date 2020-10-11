@@ -48,18 +48,6 @@ class AclCacheProvider extends AclArrayProvider {
 		return parent::loadAllAcls();
 	}
 
-	public function savePart(AbstractAclPart $part) {
-		$this->_savePart($part);
-	}
-
-	public function updatePart(AbstractAclPart $part) {
-		$this->_updatePart($part);
-	}
-
-	public function saveAcl(AclElement $aclElement) {
-		$this->_saveAcl($aclElement);
-	}
-
 	public function isAutosave(): bool {
 		return false;
 	}

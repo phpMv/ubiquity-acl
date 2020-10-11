@@ -5,6 +5,7 @@ use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
+use Ubiquity\exceptions\AclException;
 
 /**
  * Ubiquity\security\acl\persistence$AclArrayProvider
@@ -47,8 +48,12 @@ abstract class AclArrayProvider implements AclProviderInterface {
 		return $acls;
 	}
 
-	protected function _saveAcl(AclElement $aclElement) {
+	public function saveAcl(AclElement $aclElement) {
 		$this->aclsArray[$aclElement->getId_()] = $aclElement->toArray();
+	}
+
+	public function removeAcl(AclElement $aclElement) {
+		unset($this->aclsArray[$aclElement->getId_()]);
 	}
 
 	/**
@@ -78,14 +83,31 @@ abstract class AclArrayProvider implements AclProviderInterface {
 		return $this->loadAllPart(Role::class);
 	}
 
-	protected function _savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
+	public function savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		$class = \get_class($part);
 		$this->parts[$class][$part->getName()] = $part->toArray();
 	}
 
-	protected function _updatePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
+	public function updatePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		$class = \get_class($part);
 		$this->parts[$class][$part->getName()] = $part->toArray();
+	}
+
+	public function removePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
+		$name = $part->getName();
+		if ($part instanceof Resource) {
+			$field = 'resource';
+		} elseif ($part instanceof Role) {
+			$field = 'role';
+		} else {
+			$field = 'permission';
+		}
+		foreach ($this->aclsArray as $acl) {
+			if ($acl[$field]['name'] === $name) {
+				throw new AclException("$name is in use in ACLs and can't be removed!");
+			}
+		}
+		unset($this->parts[\get_class($part)][$name]);
 	}
 }
 

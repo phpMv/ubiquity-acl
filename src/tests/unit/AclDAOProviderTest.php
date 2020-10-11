@@ -3,7 +3,7 @@ use Ubiquity\security\acl\persistence\AclDAOProvider;
 use Ubiquity\cache\CacheManager;
 use Ubiquity\security\acl\AclManager;
 use Ubiquity\controllers\Startup;
-use Ubiquity\orm\DAO;
+use Ubiquity\exceptions\AclException;
 
 /**
  * AclDAOProvider test case.
@@ -42,14 +42,18 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 	 */
 	public function testLoadAllAcls() {
 		$this->assertEquals(1, \count(AclManager::getAcls()));
-		$this->assertEquals(4, count(AclManager::getRoles()));
-		$this->assertEquals(4, count(AclManager::getPermissions()));
+		$this->assertEquals(3, count(AclManager::getRoles()));
+		$this->assertEquals(3, count(AclManager::getPermissions()));
 		$this->assertEquals(3, count(AclManager::getResources()));
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'READ'));
 		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
 		AclManager::allow('USER', 'Home', 'WRITE');
 		$this->assertEquals(2, \count(AclManager::getAcls()));
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'WRITE'));
+
+		AclManager::removeAcl('USER', 'RESOURCE', 'WRITE');
+		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
+		$this->assertEquals(1, \count(AclManager::getAcls()));
 	}
 
 	/**
@@ -60,6 +64,10 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 			'USER'
 		]);
 		$this->assertTrue(AclManager::isAllowed('TESTER', 'Home', 'READ'));
+
+		AclManager::removeRole('TESTER');
+		$this->expectException(AclException::class);
+		AclManager::isAllowed('TESTER', 'Home', 'READ');
 	}
 
 	/**
@@ -76,6 +84,7 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 	 * Tests AclCacheProvider->saveAll()
 	 */
 	public function testSaveAll() {
+		$this->assertEquals(3, count(AclManager::getPermissions()));
 		AclManager::addPermission('DELETE', 5);
 		AclManager::start();
 		$this->initProvider();
@@ -86,6 +95,11 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 		AclManager::start();
 		$this->initProvider();
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'DELETE'));
+
+		AclManager::removePermission('DELETE');
+		AclManager::saveAll();
+		$this->expectException(AclException::class);
+		AclManager::isAllowed('USER', 'Home', 'DELETE');
 	}
 
 	protected function initProvider() {

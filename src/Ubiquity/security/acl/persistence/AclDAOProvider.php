@@ -63,6 +63,15 @@ class AclDAOProvider implements AclProviderInterface {
 		return DAO::save($aclElement);
 	}
 
+	/**
+	 *
+	 * {@inheritdoc}
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::removeAcl()
+	 */
+	public function removeAcl(AclElement $aclElement) {
+		return DAO::remove($aclElement);
+	}
+
 	protected function loadElements(string $className): array {
 		$elements = DAO::getAll($className);
 		$result = [];
@@ -115,6 +124,15 @@ class AclDAOProvider implements AclProviderInterface {
 	 */
 	public function updatePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		return DAO::update($part);
+	}
+
+	/**
+	 *
+	 * {@inheritdoc}
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::removePart()
+	 */
+	public function removePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
+		return DAO::remove($part);
 	}
 
 	public function isAutosave(): bool {

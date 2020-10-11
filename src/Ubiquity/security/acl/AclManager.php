@@ -7,6 +7,7 @@ use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\persistence\AclProviderInterface;
+use Ubiquity\security\acl\models\AbstractAclPart;
 
 /**
  * Ubiquity\security\acl$AclManager
@@ -104,6 +105,22 @@ class AclManager {
 
 	public static function saveAll() {
 		self::$aclList->saveAll();
+	}
+
+	public static function removeRole(string $role) {
+		self::$aclList->removeRole($role);
+	}
+
+	public static function removePermission(string $permission) {
+		self::$aclList->removePermission($permission);
+	}
+
+	public static function removeResource(string $resource) {
+		self::$aclList->removeResource($resource);
+	}
+
+	public static function removeAcl(string $role, string $resource, string $permission = null) {
+		self::$aclList->removeAcl($role, $resource, $permission);
 	}
 }
 
