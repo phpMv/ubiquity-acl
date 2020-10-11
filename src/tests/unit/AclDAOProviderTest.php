@@ -18,7 +18,7 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 				"params" => []
 			],
 			'database' => [
-				"acls" => [
+				"default" => [
 					"wrapper" => "Ubiquity\\db\\providers\\pdo\\PDOWrapper",
 					"type" => "mysql",
 					"dbName" => "acls",
@@ -33,12 +33,6 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 		];
 		CacheManager::startProd($config);
 		Startup::$config = $config;
-		DAO::setModelsDatabases([
-			\models\acls\Aclelement::class => 'acls',
-			\models\acls\Role::class => 'acls',
-			\models\acls\Resource::class => 'acls',
-			\models\acls\Permission::class => 'acls'
-		]);
 		AclManager::start();
 		AclManager::initFromProviders([
 			new AclDAOProvider([
