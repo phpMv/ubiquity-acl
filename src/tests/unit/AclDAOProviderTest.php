@@ -34,14 +34,7 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 		CacheManager::startProd($config);
 		Startup::$config = $config;
 		AclManager::start();
-		AclManager::initFromProviders([
-			new AclDAOProvider([
-				'acl' => \models\acls\Aclelement::class,
-				'role' => \models\acls\Role::class,
-				'resource' => \models\acls\Resource::class,
-				'permission' => \models\acls\Permission::class
-			])
-		]);
+		$this->initProvider();
 	}
 
 	/**
@@ -85,18 +78,25 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 	public function testSaveAll() {
 		AclManager::addPermission('DELETE', 5);
 		AclManager::start();
-		AclManager::initFromProviders([
-			new AclDAOProvider()
-		]);
+		$this->initProvider();
 		$this->assertEquals(4, count(AclManager::getPermissions()));
 		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'DELETE'));
 		AclManager::setPermissionLevel('DELETE', 0);
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'DELETE'));
 		AclManager::start();
-		AclManager::initFromProviders([
-			new AclDAOProvider()
-		]);
+		$this->initProvider();
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'DELETE'));
+	}
+
+	protected function initProvider() {
+		AclManager::initFromProviders([
+			new AclDAOProvider([
+				'acl' => \models\acls\Aclelement::class,
+				'role' => \models\acls\Role::class,
+				'resource' => \models\acls\Resource::class,
+				'permission' => \models\acls\Permission::class
+			])
+		]);
 	}
 }
 
