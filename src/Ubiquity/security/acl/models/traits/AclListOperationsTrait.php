@@ -14,6 +14,12 @@ use Ubiquity\security\acl\models\AbstractAclPart;
  */
 trait AclListOperationsTrait {
 
+	abstract public function getRoleByName(string $name);
+
+	abstract public function getResourceByName(string $name);
+
+	abstract public function getPermissionByName(string $name);
+
 	public function saveAclElement(AclElement $aclElement) {
 		foreach ($this->providers as $provider) {
 			$provider->saveAcl($aclElement);

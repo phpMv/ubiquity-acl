@@ -51,7 +51,7 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals(2, \count(AclManager::getAcls()));
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'WRITE'));
 
-		AclManager::removeAcl('USER', 'RESOURCE', 'WRITE');
+		AclManager::removeAcl('USER', 'Home', 'WRITE');
 		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
 		$this->assertEquals(1, \count(AclManager::getAcls()));
 	}
@@ -98,8 +98,7 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 
 		AclManager::removePermission('DELETE');
 		AclManager::saveAll();
-		$this->expectException(AclException::class);
-		AclManager::isAllowed('USER', 'Home', 'DELETE');
+		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'DELETE'));
 	}
 
 	protected function initProvider() {
