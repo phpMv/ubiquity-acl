@@ -53,31 +53,32 @@ trait AclListOperationsTrait {
 	public function removeRole(string $roleName) {
 		$role = $this->getRoleByName($roleName);
 		unset($this->roles["role_$roleName"]);
+		$this->removeAcl($roleName);
 		$this->removePart($role);
 	}
 
 	public function removePermission(string $permissionName) {
 		$permission = $this->getPermissionByName($permissionName);
 		unset($this->permissions["perm_$permissionName"]);
+		$this->removeAcl(null, null, $permissionName);
 		$this->removePart($permission);
 	}
 
 	public function removeResource(string $resourceName) {
 		$resource = $this->getResourceByName($resourceName);
 		unset($this->resources["res_$resourceName"]);
+		$this->removeAcl(null, $resourceName);
 		$this->removePart($resource);
 	}
 
-	public function removeAcl(string $roleName, string $resourceName, string $permissionName = null) {
+	public function removeAcl(string $roleName = null, string $resourceName = null, string $permissionName = null) {
 		$toRemove = [];
 		foreach ($this->acls as $index => $acl) {
-			if ($acl->getResource()->getName() === $resourceName && $acl->getRole()->getName() === $roleName) {
-				if ($permissionName == null || $acl->getPermission()->getName() === $permissionName) {
-					foreach ($this->providers as $provider) {
-						$provider->removeAcl($acl);
-					}
-					$toRemove[] = $index;
+			if (($resourceName == null || $acl->getResource()->getName() === $resourceName) && ($roleName == null || $acl->getRole()->getName() === $roleName) && ($permissionName == null || $acl->getPermission()->getName() === $permissionName)) {
+				foreach ($this->providers as $provider) {
+					$provider->removeAcl($acl);
 				}
+				$toRemove[] = $index;
 			}
 		}
 		foreach ($toRemove as $remove) {
