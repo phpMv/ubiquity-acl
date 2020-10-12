@@ -53,19 +53,21 @@ trait AclListOperationsTrait {
 	public function removeRole(string $roleName) {
 		$role = $this->getRoleByName($roleName);
 		unset($this->roles["role_$roleName"]);
-		if (isset($this->elementsCache["role_$roleName"])) {
-			unset($this->elementsCache["role_$roleName"]);
-		}
+		$this->unsetCache("role_$roleName");
 		$this->removeAcl($roleName);
 		$this->removePart($role);
+	}
+
+	protected function unsetCache($name) {
+		if (isset($this->elementsCache[$name])) {
+			unset($this->elementsCache[$name]);
+		}
 	}
 
 	public function removePermission(string $permissionName) {
 		$permission = $this->getPermissionByName($permissionName);
 		unset($this->permissions["perm_$permissionName"]);
-		if (isset($this->elementsCache["perm_$permissionName"])) {
-			unset($this->elementsCache["perm_$permissionName"]);
-		}
+		$this->unsetCache("perm_$permissionName");
 		$this->removeAcl(null, null, $permissionName);
 		$this->removePart($permission);
 	}
@@ -73,9 +75,7 @@ trait AclListOperationsTrait {
 	public function removeResource(string $resourceName) {
 		$resource = $this->getResourceByName($resourceName);
 		unset($this->resources["res_$resourceName"]);
-		if (isset($this->elementsCache["res_$resourceName"])) {
-			unset($this->elementsCache["res_$resourceName"]);
-		}
+		$this->unsetCache("res_$resourceName");
 		$this->removeAcl(null, $resourceName);
 		$this->removePart($resource);
 	}
