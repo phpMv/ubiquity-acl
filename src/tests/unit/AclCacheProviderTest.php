@@ -83,7 +83,8 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 
 		AclManager::removePermission('DELETE');
 		AclManager::saveAll();
-		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'DELETE'));
+		$this->expectException(AclException::class);
+		AclManager::isAllowed('USER', 'Home', 'DELETE');
 	}
 }
 
