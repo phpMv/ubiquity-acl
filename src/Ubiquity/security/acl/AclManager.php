@@ -117,12 +117,12 @@ class AclManager {
 	 * @param string $permission
 	 */
 	public static function addAndAllow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
-		self::$aclList->addRole(new Role($name, []));
+		self::$aclList->addRole(new Role($role, []));
 		if ($resource !== '*') {
-			self::$aclList->addResource($resource);
+			self::$aclList->addResource(new Resource($resource));
 		}
 		if ($permission !== 'ALL') {
-			self::$aclList->addPermission($permission);
+			self::$aclList->addPermission(new Permission($permission));
 		}
 		self::$aclList->allow($role, $resource ?? '*', $permission ?? 'ALL');
 	}
