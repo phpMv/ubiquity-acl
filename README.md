@@ -5,3 +5,13 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/phpMv/ubiquity-acl/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/phpMv/ubiquity-acl/?branch=main)
 
 Access control lists for Ubiquity framework
+
+## Samples
+
+```php
+AclManager::start();
+AclManager::addRole('@USER');
+AclManager::addResource('Home');
+AclManager::addPermission('READ',1);
+AclManager::allow('@USER','Home','READ');
+```
