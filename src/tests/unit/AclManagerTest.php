@@ -113,6 +113,25 @@ class AclManagerTest extends \Codeception\Test\Unit {
 	}
 
 	/**
+	 * Tests AclManager::addRoles()
+	 */
+	public function testAddRoles() {
+		$this->aclManager->start();
+		$this->aclManager->addRoles([
+			'user' => [],
+			'admin' => [
+				'user'
+			]
+		]);
+		$this->aclManager->addPermission('READ');
+		$this->aclManager->allow('user', '*', 'READ');
+		$this->assertTrue($this->aclManager->isAllowed('user', '*', 'READ'));
+		$this->assertTrue($this->aclManager->isAllowed('admin', '*', 'READ'));
+		$this->assertEquals(3, count($this->aclManager->getRoles()));
+		$this->assertEquals(2, count($this->aclManager->getPermissions()));
+	}
+
+	/**
 	 * Tests AclManager::isAllowed()
 	 */
 	public function testIsAllowed() {
