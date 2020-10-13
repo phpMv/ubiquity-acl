@@ -52,12 +52,30 @@ class AclManager {
 		self::$aclList->addRole(new Role($name, $parents));
 	}
 
+	public static function addRoles(array $nameParents) {
+		foreach ($nameParents as $name => $parents) {
+			self::$aclList->addRole(new Role($name, $parents));
+		}
+	}
+
 	public static function addResource(string $name, ?string $value = null) {
 		self::$aclList->addResource(new Resource($name, $value));
 	}
 
+	public static function addResources(array $nameValue) {
+		foreach ($nameValue as $name => $value) {
+			self::$aclList->addResource(new Resource($name, $value));
+		}
+	}
+
 	public static function addPermission(string $name, int $level = 0) {
 		self::$aclList->addPermission(new Permission($name, $level));
+	}
+
+	public static function addPermissions(array $nameLevel) {
+		foreach ($nameLevel as $name => $level) {
+			self::$aclList->addPermission(new Permission($name, $level));
+		}
 	}
 
 	public static function setPermissionLevel(string $name, int $level) {
@@ -88,6 +106,24 @@ class AclManager {
 	 * @param string $permission
 	 */
 	public static function allow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
+		self::$aclList->allow($role, $resource ?? '*', $permission ?? 'ALL');
+	}
+
+	/**
+	 * Add role, resource and permission and allow this role to access to resource with the permission.
+	 *
+	 * @param string $role
+	 * @param string $resource
+	 * @param string $permission
+	 */
+	public static function addAndAllow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
+		self::$aclList->addRole(new Role($name, []));
+		if ($resource !== '*') {
+			self::$aclList->addResource($resource);
+		}
+		if ($permission !== 'ALL') {
+			self::$aclList->addPermission($permission);
+		}
 		self::$aclList->allow($role, $resource ?? '*', $permission ?? 'ALL');
 	}
 
