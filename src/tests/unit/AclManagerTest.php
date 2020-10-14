@@ -132,6 +132,42 @@ class AclManagerTest extends \Codeception\Test\Unit {
 	}
 
 	/**
+	 * Tests AclManager::addResources()
+	 */
+	public function testAddResources() {
+		$this->aclManager->start();
+		$this->aclManager->addResources([
+			'Home' => '/home',
+			'Admin' => '/admin'
+		]);
+		$this->aclManager->addPermission('READ');
+		$this->aclManager->allow('@ALL', 'Home', 'READ');
+		$this->assertTrue($this->aclManager->isAllowed('@ALL', 'Home', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('@ALL', 'Admin', 'READ'));
+		$this->assertEquals(3, count($this->aclManager->getResources()));
+		$this->assertEquals(2, count($this->aclManager->getPermissions()));
+	}
+
+	/**
+	 * Tests AclManager::addPermissions()
+	 */
+	public function testAddPermissions() {
+		$this->aclManager->start();
+		$this->aclManager->addPermissions([
+			'READ' => 1,
+			'WRITE' => 2
+		]);
+		$this->aclManager->addRole('user');
+		$this->aclManager->addResource('Home');
+		$this->aclManager->allow('user', 'Home', 'READ');
+		$this->assertTrue($this->aclManager->isAllowed('user', 'Home', 'READ'));
+		$this->assertFalse($this->aclManager->isAllowed('user', 'Home', 'WRITE'));
+		$this->assertEquals(3, count($this->aclManager->getPermissions()));
+		$this->assertEquals(2, count($this->aclManager->getRoles()));
+		$this->assertEquals(2, count($this->aclManager->getResources()));
+	}
+
+	/**
 	 * Tests AclManager::isAllowed()
 	 */
 	public function testIsAllowed() {
