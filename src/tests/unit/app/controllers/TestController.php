@@ -5,11 +5,14 @@ use Ubiquity\controllers\Controller;
 
 /**
  *
- * @resource('Tester')
- *
+ * @resource("Home")
  */
 class TestController extends Controller {
 
+	/**
+	 *
+	 * @resource('IndexResource')
+	 */
 	public function index() {}
 }
 

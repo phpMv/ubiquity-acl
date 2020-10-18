@@ -108,11 +108,11 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			new AclCacheProvider()
 		]);
 		$this->assertEquals(4, count(AclManager::getResources()));
-		AclManager::removeRole('Tester');
+		AclManager::removeResource('IndexResource');
 		$this->assertEquals(3, count(AclManager::getResources()));
 		AclManager::saveAll();
 		$this->expectException(AclException::class);
-		AclManager::isAllowed('Tester', '*', 'ALL');
+		AclManager::isAllowed('@ALL', 'IndexResource', 'ALL');
 	}
 }
 
