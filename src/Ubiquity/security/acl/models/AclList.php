@@ -195,13 +195,13 @@ class AclList {
 
 	public function addAndAllow(string $roleName, string $resourceName, string $permissionName) {
 		if (! $this->elementExistByName($roleName, $this->roles)) {
-			$this->addRole($roleName);
+			$this->addRole(new Role($roleName));
 		}
 		if ($resourceName !== '*' && ! $this->elementExistByName($resourceName, $this->resources)) {
-			$this->addResource($resourceName);
+			$this->addResource(new Resource($resourceName));
 		}
 		if ($permission !== 'ALL' && ! $this->elementExistByName($permissionName, $this->permissions)) {
-			$this->addPermission($permissionName);
+			$this->addPermission(new Permission($permissionName));
 		}
 		$this->allow($roleName, $resourceName ?? '*', $permissionName ?? 'ALL');
 	}
