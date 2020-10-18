@@ -200,7 +200,7 @@ class AclList {
 		if ($resourceName !== '*' && ! $this->elementExistByName($resourceName, $this->resources)) {
 			$this->addResource(new Resource($resourceName));
 		}
-		if ($permission !== 'ALL' && ! $this->elementExistByName($permissionName, $this->permissions)) {
+		if ($permissionName !== 'ALL' && ! $this->elementExistByName($permissionName, $this->permissions)) {
 			$this->addPermission(new Permission($permissionName));
 		}
 		$this->allow($roleName, $resourceName ?? '*', $permissionName ?? 'ALL');
