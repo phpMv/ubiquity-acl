@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": "^7.4",
-        "phpmv/ubiquity": "^2.3"
+        "phpmv/ubiquity": "dev-master"
     },
     "license": "Apache-2.0",
     "authors": [
@@ -36,6 +36,7 @@
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
-        "codeception/module-asserts": "^1.0.0"
+        "codeception/module-asserts": "^1.0.0",
+        "phpmv/ubiquity-dev": "^0.0.19"
     }
 }
