@@ -3,11 +3,9 @@ namespace Ubiquity\security\acl\cache;
 
 use Ubiquity\controllers\Controller;
 use Ubiquity\orm\parser\Reflexion;
-use Ubiquity\annotations\acl\ResourceAnnotation;
 use Ubiquity\security\acl\AclManager;
 use Ubiquity\cache\ClassUtils;
 use Ubiquity\exceptions\AclException;
-use Ubiquity\security\acl\persistence\AclCacheProvider;
 
 /**
  * Ubiquity\security\acl\cache$AclControllerParser
@@ -42,21 +40,23 @@ class AclControllerParser {
 		foreach ($methods as $method) {
 			$action = $method->name;
 			$permission = 'ALL';
+			$resource = NULL;
 			if ($method->getDeclaringClass()->getName() === $controllerClass) {
 				try {
 					$annotResource = Reflexion::getAnnotationMethod($controllerClass, $action, '@resource');
 					$annotPermission = Reflexion::getAnnotationMethod($controllerClass, $action, '@permission');
-					if (isset($annotResource)) {
+					if ($annotResource) {
 						$resource = $annotResource->name;
 						AclManager::addResource($annotResource->name, $controller . '.' . $action);
 					}
-					if (isset($annotPermission)) {
+					$resource ??= $this->mainResource ? $this->mainResource->name : $controller . '.' . $action;
+					if ($annotPermission) {
 						$permission = $annotPermission->name;
 						AclManager::addPermission($annotPermission->name, $annotPermission->level);
 						$hasPermission = true;
-						$this->permissionMap->addAction($controller, $action, $annotResource ?? ($this->mainResource ? $this->mainResource->name : $controller . '.' . $action), $annotPermission->name);
-					} elseif (isset($annotResource)) {
-						$this->permissionMap->addAction($controller, $action, $annotResource, 'ALL');
+						$this->permissionMap->addAction($controller, $action, $resource, $annotPermission->name);
+					} elseif ($annotResource) {
+						$this->permissionMap->addAction($controller, $action, $resource, 'ALL');
 					}
 					$annotsAllow = Reflexion::getAnnotationsMethod($controllerClass, $action, '@allow');
 					if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
@@ -115,13 +115,7 @@ class AclControllerParser {
 
 	public function save() {
 		$this->permissionMap->save();
-		$aclList = AclManager::getAclList();
-		$providers = $aclList->getProviders();
-		$aclList->setProviders([
-			new AclCacheProvider()
-		]);
-		$aclList->saveAll();
-		$aclList->setProviders($providers);
+		AclManager::saveAll();
 	}
 }
 

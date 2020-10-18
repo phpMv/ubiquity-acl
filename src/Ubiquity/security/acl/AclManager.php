@@ -5,9 +5,7 @@ use Ubiquity\security\acl\models\AclList;
 use Ubiquity\security\acl\models\Role;
 use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Permission;
-use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\persistence\AclProviderInterface;
-use Ubiquity\security\acl\models\AbstractAclPart;
 use Ubiquity\cache\ClassUtils;
 use Ubiquity\security\acl\cache\AclControllerParser;
 use Ubiquity\exceptions\AclException;
@@ -168,7 +166,7 @@ class AclManager {
 	}
 
 	public static function initCache(&$config) {
-		CacheManager::startProd($config);
+		CacheManager::start($config);
 		CacheManager::registerAnnotations([
 			'allow' => AllowAnnotation::class,
 			'resource' => ResourceAnnotation::class,
