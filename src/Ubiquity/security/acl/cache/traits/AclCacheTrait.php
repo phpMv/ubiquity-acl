@@ -13,10 +13,10 @@ use Ubiquity\cache\CacheManager;
  */
 trait AclCacheTrait {
 
-	protected const KEY = 'acls/';
+	protected static $KEY = 'acls/';
 
 	protected function getRootKey($element) {
-		return self::KEY . \md5($element);
+		return self::$KEY . \md5($element);
 	}
 
 	protected function createCache($part) {
