@@ -7,14 +7,18 @@ use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\models\Role;
 use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Permission;
+use Ubiquity\security\acl\cache\traits\AclCacheTrait;
 
+/**
+ * Ubiquity\security\acl\persistence$AclCacheProvider
+ * This class is part of Ubiquity
+ *
+ * @author jc
+ * @version 1.0.0
+ *
+ */
 class AclCacheProvider extends AclArrayProvider {
-
-	private $key = 'acls/';
-
-	private function getRootKey($element) {
-		return $this->key . \md5($element);
-	}
+	use AclCacheTrait;
 
 	public function __construct() {
 		$cacheKeys = $this->getCacheKeys();
@@ -30,12 +34,6 @@ class AclCacheProvider extends AclArrayProvider {
 			$this->getRootKey(Resource::class),
 			$this->getRootKey(Permission::class)
 		];
-	}
-
-	protected function createCache($part) {
-		if (! CacheManager::$cache->exists($part)) {
-			CacheManager::$cache->store($part, []);
-		}
 	}
 
 	protected function loadAllPart($class): array {

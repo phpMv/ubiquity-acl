@@ -193,6 +193,19 @@ class AclList {
 		$this->saveAclElement($aclElm);
 	}
 
+	public function addAndAllow(string $roleName, string $resourceName, string $permissionName) {
+		if (! $this->elementExistByName($roleName, $this->roles)) {
+			$this->addRole($roleName);
+		}
+		if ($resourceName !== '*' && ! $this->elementExistByName($resourceName, $this->resources)) {
+			$this->addResource($resourceName);
+		}
+		if ($permission !== 'ALL' && ! $this->elementExistByName($permissionName, $this->permissions)) {
+			$this->addPermission($permissionName);
+		}
+		$this->allow($roleName, $resourceName ?? '*', $permissionName ?? 'ALL');
+	}
+
 	public function getRolePermissionsOn(string $roleName, $resourceName = '*'): array {
 		$role = $this->getRoleByName($roleName);
 		$parents = $role->getParentsArray();

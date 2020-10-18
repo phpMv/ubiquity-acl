@@ -86,5 +86,33 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->expectException(AclException::class);
 		AclManager::isAllowed('USER', 'Home', 'DELETE');
 	}
+
+	/**
+	 * Tests AclManager::initCache()
+	 */
+	public function testInitCache() {
+		$config = [
+			"cache" => [
+				"directory" => "cache/",
+				"system" => "Ubiquity\\cache\\system\\ArrayCache",
+				"params" => []
+			],
+			"mvcNS" => [
+				"controllers" => "controllers"
+			]
+		];
+		$this->assertEquals(3, count(AclManager::getRoles()));
+		AclManager::initCache($config);
+		AclManager::start();
+		AclManager::initFromProviders([
+			new AclCacheProvider()
+		]);
+		$this->assertEquals(4, count(AclManager::getRoles()));
+		AclManager::removeRole('Tester');
+		$this->assertEquals(3, count(AclManager::getRoles()));
+		AclManager::saveAll();
+		$this->expectException(AclException::class);
+		AclManager::isAllowed('Tester', '*', 'ALL');
+	}
 }
 

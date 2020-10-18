@@ -8,6 +8,13 @@ use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\persistence\AclProviderInterface;
 use Ubiquity\security\acl\models\AbstractAclPart;
+use Ubiquity\cache\ClassUtils;
+use Ubiquity\security\acl\cache\AclControllerParser;
+use Ubiquity\exceptions\AclException;
+use Ubiquity\cache\CacheManager;
+use Ubiquity\annotations\acl\AllowAnnotation;
+use Ubiquity\annotations\acl\ResourceAnnotation;
+use Ubiquity\annotations\acl\PermissionAnnotation;
 
 /**
  * Ubiquity\security\acl$AclManager
@@ -90,6 +97,14 @@ class AclManager {
 		return self::$aclList->getResources();
 	}
 
+	/**
+	 *
+	 * @return \Ubiquity\security\acl\models\AclList
+	 */
+	public static function getAclList() {
+		return AclManager::$aclList;
+	}
+
 	public static function getPermissions() {
 		return self::$aclList->getPermissions();
 	}
@@ -117,14 +132,7 @@ class AclManager {
 	 * @param string $permission
 	 */
 	public static function addAndAllow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
-		self::$aclList->addRole(new Role($role, []));
-		if ($resource !== '*') {
-			self::$aclList->addResource(new Resource($resource));
-		}
-		if ($permission !== 'ALL') {
-			self::$aclList->addPermission(new Permission($permission));
-		}
-		self::$aclList->allow($role, $resource ?? '*', $permission ?? 'ALL');
+		self::$aclList->addAndAllow($role, $resource ?? '*', $permission ?? 'ALL');
 	}
 
 	/**
@@ -157,6 +165,31 @@ class AclManager {
 
 	public static function removeAcl(string $role, string $resource, string $permission = null) {
 		self::$aclList->removeAcl($role, $resource, $permission);
+	}
+
+	public static function initCache(&$config) {
+		CacheManager::startProd($config);
+		CacheManager::registerAnnotations([
+			'allow' => AllowAnnotation::class,
+			'resource' => ResourceAnnotation::class,
+			'permission' => PermissionAnnotation::class
+		]);
+		$files = \Ubiquity\cache\CacheManager::getControllersFiles($config, true);
+		$parser = new AclControllerParser();
+		$parser->init();
+		foreach ($files as $file) {
+			if (\is_file($file)) {
+				$controller = ClassUtils::getClassFullNameFromFile($file);
+				try {
+					$parser->parse($controller);
+				} catch (\Exception $e) {
+					if ($e instanceof AclException) {
+						throw $e;
+					}
+				}
+			}
+		}
+		$parser->save();
 	}
 }
 
