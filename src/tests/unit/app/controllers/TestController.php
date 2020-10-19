@@ -17,7 +17,7 @@ class TestController extends Controller {
 
 	/**
 	 *
-	 * @allow('@ALL')
+	 * @allow('role'=>'@ALL','permission'=>'ALLOW')
 	 */
 	public function allowExisting() {}
 }

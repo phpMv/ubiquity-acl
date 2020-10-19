@@ -38,34 +38,7 @@ class AclControllerParser {
 		$controllerClass = $this->controllerClass;
 		$controller = ClassUtils::getClassSimpleName($controllerClass);
 		foreach ($methods as $method) {
-			$action = $method->name;
-			$permission = 'ALL';
-			$resource = NULL;
-			if ($method->getDeclaringClass()->getName() === $controllerClass) {
-				try {
-					$annotResource = Reflexion::getAnnotationMethod($controllerClass, $action, '@resource');
-					$annotPermission = Reflexion::getAnnotationMethod($controllerClass, $action, '@permission');
-					if ($annotResource) {
-						$resource = $annotResource->name;
-						AclManager::addResource($annotResource->name, $controller . '.' . $action);
-					}
-					$resource ??= $this->mainResource ? $this->mainResource->name : $controller . '.' . $action;
-					if ($annotPermission) {
-						$permission = $annotPermission->name;
-						AclManager::addPermission($annotPermission->name, $annotPermission->level);
-						$hasPermission = true;
-						$this->permissionMap->addAction($controller, $action, $resource, $annotPermission->name);
-					} elseif ($annotResource) {
-						$this->permissionMap->addAction($controller, $action, $resource, 'ALL');
-					}
-					$annotsAllow = Reflexion::getAnnotationsMethod($controllerClass, $action, '@allow');
-					if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
-						$this->addAllows($annotsAllow, $controller, $action, $resource, $permission);
-					}
-				} catch (\Exception $e) {
-					// Exception in controller code
-				}
-			}
+			$this->parseMethod($method, $hasPermission);
 		}
 		if ($hasPermission || $this->mainResource != null || $this->mainPermission != null) {
 			$permission = 'ALL';
@@ -79,6 +52,37 @@ class AclControllerParser {
 			$annotsAllow = Reflexion::getAnnotationClass($controllerClass, '@allow');
 			if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
 				$this->addAllows($annotsAllow, $controller, '*', $resource, $permission);
+			}
+		}
+	}
+
+	protected function parseMethod(\ReflectionMethod $method, bool &$hasPermission) {
+		$action = $method->name;
+		$permission = 'ALL';
+		$resource = NULL;
+		if ($method->getDeclaringClass()->getName() === $controllerClass) {
+			try {
+				$annotResource = Reflexion::getAnnotationMethod($controllerClass, $action, '@resource');
+				$annotPermission = Reflexion::getAnnotationMethod($controllerClass, $action, '@permission');
+				if ($annotResource) {
+					$resource = $annotResource->name;
+					AclManager::addResource($annotResource->name, $controller . '.' . $action);
+				}
+				$resource ??= $this->mainResource ? $this->mainResource->name : $controller . '.' . $action;
+				if ($annotPermission) {
+					$permission = $annotPermission->name;
+					AclManager::addPermission($annotPermission->name, $annotPermission->level);
+					$hasPermission = true;
+					$this->permissionMap->addAction($controller, $action, $resource, $annotPermission->name);
+				} elseif ($annotResource) {
+					$this->permissionMap->addAction($controller, $action, $resource, 'ALL');
+				}
+				$annotsAllow = Reflexion::getAnnotationsMethod($controllerClass, $action, '@allow');
+				if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
+					$this->addAllows($annotsAllow, $controller, $action, $resource, $permission);
+				}
+			} catch (\Exception $e) {
+				// Exception in controller code
 			}
 		}
 	}
