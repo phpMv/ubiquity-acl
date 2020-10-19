@@ -108,9 +108,12 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::initFromProviders([
 			new AclCacheProvider()
 		]);
+		$this->assertEquals(2, \count(AclManager::getAcls()));
 		$this->assertEquals(4, count(AclManager::getResources()));
 		AclManager::removeResource('IndexResource');
+		AclManager::removeAcl('@ALL', 'TestController.allowExisting', 'ALL');
 		$this->assertEquals(3, count(AclManager::getResources()));
+		$this->assertEquals(1, \count(AclManager::getAcls()));
 		AclManager::saveAll();
 	}
 }
