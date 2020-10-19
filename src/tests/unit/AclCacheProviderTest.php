@@ -103,6 +103,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		];
 		$this->assertEquals(3, count(AclManager::getResources()));
 		AclManager::initCache($config);
+
 		AclManager::start();
 		AclManager::initFromProviders([
 			new AclCacheProvider()

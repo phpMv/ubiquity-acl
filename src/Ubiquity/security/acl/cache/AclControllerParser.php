@@ -76,7 +76,7 @@ class AclControllerParser {
 				$permission = $this->mainPermission->name;
 				AclManager::addPermission($this->mainPermission->name, ($this->mainPermission->level) ?? 0);
 			}
-			$annotsAllow = $annotsAllow = Reflexion::getAnnotationClass($controllerClass, '@allow');
+			$annotsAllow = Reflexion::getAnnotationClass($controllerClass, '@allow');
 			if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
 				$this->addAllows($annotsAllow, $controller, '*', $resource, $permission);
 			}
