@@ -26,5 +26,23 @@ class TestController extends Controller {
 	 * @allow('role'=>'@OTHER','resource'=>'Other','permission'=>'ALLOW_OTHER')
 	 */
 	public function allowOther() {}
+
+	/**
+	 *
+	 * @permission('NEW_PERMISSION')
+	 */
+	public function newPermission() {}
+
+	/**
+	 *
+	 * @permission('READ')
+	 */
+	public function existingPerm() {}
+
+	/**
+	 *
+	 * @allow("@OTHER")
+	 */
+	public function allowOther2() {}
 }
 
