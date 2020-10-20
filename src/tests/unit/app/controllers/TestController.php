@@ -44,5 +44,11 @@ class TestController extends Controller {
 	 * @allow("@OTHER")
 	 */
 	public function allowOther2() {}
+
+	/**
+	 *
+	 * @permission("name"=>"ADMIN","level"=>100)
+	 */
+	public function otherPermission() {}
 }
 
