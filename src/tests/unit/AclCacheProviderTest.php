@@ -103,22 +103,28 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		];
 		$this->assertEquals(3, count(AclManager::getResources()));
 		$this->assertEquals(1, \count(AclManager::getAcls()));
+		$this->assertEquals(3, count(AclManager::getRoles()));
+
 		AclManager::initCache($config);
 
 		AclManager::start();
 		AclManager::initFromProviders([
 			new AclCacheProvider()
 		]);
+		$this->assertEquals(4, count(AclManager::getRoles()));
 		$this->assertEquals(3, \count(AclManager::getAcls()));
 		$this->assertEquals(5, count(AclManager::getResources()));
 		$this->assertTrue(AclManager::isAllowed('@ALL', 'Home', 'ALLOW'));
 		$this->assertTrue(AclManager::isAllowed('@OTHER', 'Other', 'ALLOW_OTHER'));
+
 		AclManager::removeResource('IndexResource');
 		AclManager::removeResource('Other');
 		AclManager::removeAcl('@ALL', 'Home', 'ALLOW');
 		AclManager::removeAcl('@OTHER', 'Other', 'ALLOW_OTHER');
 		AclManager::removePermission('ALLOW');
 		AclManager::removePermission('ALLOW_OTHER');
+		AclManager::removeRole('@OTHER');
+		$this->assertEquals(3, count(AclManager::getRoles()));
 		$this->assertEquals(3, count(AclManager::getResources()));
 		$this->assertEquals(1, \count(AclManager::getAcls()));
 		AclManager::saveAll();
