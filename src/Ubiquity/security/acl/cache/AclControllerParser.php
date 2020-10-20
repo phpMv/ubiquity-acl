@@ -6,6 +6,7 @@ use Ubiquity\orm\parser\Reflexion;
 use Ubiquity\security\acl\AclManager;
 use Ubiquity\cache\ClassUtils;
 use Ubiquity\exceptions\AclException;
+use PharIo\Manifest\ElementCollectionException;
 
 /**
  * Ubiquity\security\acl\cache$AclControllerParser
@@ -38,7 +39,7 @@ class AclControllerParser {
 		$controllerClass = $this->controllerClass;
 		$controller = ClassUtils::getClassSimpleName($controllerClass);
 		foreach ($methods as $method) {
-			$this->parseMethod($method, $hasPermission);
+			$this->parseMethod($method, $hasPermission, $controller);
 		}
 		if ($hasPermission || $this->mainResource != null || $this->mainPermission != null) {
 			$permission = 'ALL';
@@ -56,10 +57,11 @@ class AclControllerParser {
 		}
 	}
 
-	protected function parseMethod(\ReflectionMethod $method, bool &$hasPermission) {
+	protected function parseMethod(\ReflectionMethod $method, bool &$hasPermission, $controller) {
 		$action = $method->name;
-		$permission = 'ALL';
+		$permission = NULL;
 		$resource = NULL;
+		$controllerClass = $this->controllerClass;
 		if ($method->getDeclaringClass()->getName() === $controllerClass) {
 			try {
 				$annotResource = Reflexion::getAnnotationMethod($controllerClass, $action, '@resource');
