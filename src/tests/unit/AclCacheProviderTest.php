@@ -121,13 +121,14 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertTrue(AclManager::isAllowed('@OTHER', 'Other', 'ALLOW_OTHER'));
 
 		$this->assertFalse(AclManager::isAllowed('@ALL', 'Home', 'ADMIN'));
-		$this->assertTrue(AclManager::isAllowed('@OTHER', 'Home', 'ADMIN'));
+		$this->assertFalse(AclManager::isAllowed('@OTHER', 'Home', 'ADMIN'));
 
 		AclManager::removeResource('IndexResource');
 		AclManager::removeResource('Other');
+		AclManager::removeResource('TestController.allowOther2');
 		AclManager::removeAcl('@ALL', 'Home', 'ALLOW');
 		AclManager::removeAcl('@OTHER', 'Other', 'ALLOW_OTHER');
-		AclManager::removeAcl('@OTHER', 'Home', 'ALL');
+		AclManager::removeAcl('@OTHER', 'TestController.allowOther2', 'ALL');
 		AclManager::removePermission('ALLOW');
 		AclManager::removePermission('ALLOW_OTHER');
 		AclManager::removePermission('NEW_PERMISSION');

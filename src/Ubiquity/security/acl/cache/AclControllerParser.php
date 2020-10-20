@@ -71,18 +71,17 @@ class AclControllerParser {
 					$resource = $annotResource->name;
 					AclManager::addResource($annotResource->name, $controller . '.' . $action);
 				}
-				$resource ??= $this->mainResource ? $this->mainResource->name : $controller . '.' . $action;
+
 				if ($annotPermission) {
 					$permission = $annotPermission->name;
 					AclManager::addPermission($annotPermission->name, $annotPermission->level ?? 0);
+					$resource ??= $this->mainResource ? $this->mainResource->name : NULL;
 					$hasPermission = true;
-					$this->permissionMap->addAction($controller, $action, $resource, $annotPermission->name);
-				} elseif ($annotResource) {
-					$this->permissionMap->addAction($controller, $action, $resource, 'ALL');
+				} else {
+					$resource ??= $controller . '.' . $action;
 				}
 				$annotsAllow = Reflexion::getAnnotationsMethod($controllerClass, $action, '@allow');
 				if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
-					$resource = $annotResource ? $annotResource->name : NULL;
 					$this->addAllows($annotsAllow, $controller, $action, $resource, $permission);
 				}
 				$this->permissionMap->addAction($controller, $action, $resource, $permission);
