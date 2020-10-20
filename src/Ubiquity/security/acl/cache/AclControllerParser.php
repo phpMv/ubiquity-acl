@@ -7,6 +7,7 @@ use Ubiquity\security\acl\AclManager;
 use Ubiquity\cache\ClassUtils;
 use Ubiquity\exceptions\AclException;
 use PharIo\Manifest\ElementCollectionException;
+use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * Ubiquity\security\acl\cache$AclControllerParser
@@ -81,15 +82,17 @@ class AclControllerParser {
 				}
 				$annotsAllow = Reflexion::getAnnotationsMethod($controllerClass, $action, '@allow');
 				if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
+					$resource = $annotResource ? $annotResource->name : NULL;
 					$this->addAllows($annotsAllow, $controller, $action, $resource, $permission);
 				}
+				$this->permissionMap->addAction($controller, $action, $resource, $permission);
 			} catch (\Exception $e) {
 				// Exception in controller code
 			}
 		}
 	}
 
-	protected function addAllows($annotsAllow, $controller, $action, $resource, $permission) {
+	protected function addAllows($annotsAllow, $controller, $action, &$resource, &$permission) {
 		foreach ($annotsAllow as $annotAllow) {
 			if (isset($annotAllow->resource) && isset($resource) && $resource !== $annotAllow->resource) {
 				throw new AclException("Resources {$resource} and {$annotAllow->resource} are in conflict for action {$controller}.{$action}");
@@ -97,7 +100,7 @@ class AclControllerParser {
 			if (isset($annotAllow->permission) && isset($permission) && $permission !== $annotAllow->permission) {
 				throw new AclException("Permissions {$permission} and {$annotAllow->permission} are in conflict for action {$controller}.{$action}");
 			}
-			AclManager::addAndAllow($annotAllow->role, $annotAllow->resource ?? $resource, $annotAllow->permission ?? $permission);
+			AclManager::addAndAllow($annotAllow->role, $resource = $annotAllow->resource ?? $resource, $permission = $annotAllow->permission ?? $permission);
 		}
 	}
 
