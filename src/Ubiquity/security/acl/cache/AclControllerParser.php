@@ -93,7 +93,7 @@ class AclControllerParser {
 
 	protected function addAllows($annotsAllow, $controller, $action, &$resource, &$permission) {
 		foreach ($annotsAllow as $annotAllow) {
-			if (isset($annotAllow->resource) && isset($resource) && $resource !== $annotAllow->resource) {
+			if (isset($annotAllow->resource) && isset($resource) && $resource !== $annotAllow->resource && $permission != null) {
 				throw new AclException("Resources {$resource} and {$annotAllow->resource} are in conflict for action {$controller}.{$action}");
 			}
 			if (isset($annotAllow->permission) && isset($permission) && $permission !== $annotAllow->permission) {
