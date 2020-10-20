@@ -78,7 +78,7 @@ class AclControllerParser {
 					$resource ??= $this->mainResource ? $this->mainResource->name : NULL;
 					$hasPermission = true;
 				} else {
-					$resource ??= $controller . '.' . $action;
+					$resource ??= $this->mainResource ? $this->mainResource->name : ($controller . '.' . $action);
 				}
 				$annotsAllow = Reflexion::getAnnotationsMethod($controllerClass, $action, '@allow');
 				if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
@@ -98,6 +98,9 @@ class AclControllerParser {
 			}
 			if (isset($annotAllow->permission) && isset($permission) && $permission !== $annotAllow->permission) {
 				throw new AclException("Permissions {$permission} and {$annotAllow->permission} are in conflict for action {$controller}.{$action}");
+			}
+			if ($permission === null && $annotAllow->permission === null) {
+				$resource = $controller . '.' . $action;
 			}
 			AclManager::addAndAllow($annotAllow->role, $resource = $annotAllow->resource ?? $resource, $permission = $annotAllow->permission ?? $permission);
 		}
