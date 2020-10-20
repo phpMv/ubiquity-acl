@@ -31,7 +31,7 @@ class PermissionsMap {
 		return \crc32($controller . $action) . '_';
 	}
 
-	public function addAction(string $controller, string $action, string $resource, ?string $permission = 'ALL') {
+	public function addAction(string $controller, string $action, ?string $resource = '*', ?string $permission = 'ALL') {
 		$this->arrayMap[$this->getKey($controller, $action)] = [
 			'resource' => $resource,
 			'permission' => $permission
