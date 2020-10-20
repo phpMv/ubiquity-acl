@@ -24,7 +24,7 @@ class PermissionsMap {
 	private const CACHE_KEY = 'permissionsMap';
 
 	public function __construct() {
-		$this->createCache(self::CACHE_KEY);
+		$this->createCache($this->getRootKey(self::CACHE_KEY));
 	}
 
 	protected function getKey($controller, $action) {
