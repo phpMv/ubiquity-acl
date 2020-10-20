@@ -74,7 +74,7 @@ class AclControllerParser {
 				$resource ??= $this->mainResource ? $this->mainResource->name : $controller . '.' . $action;
 				if ($annotPermission) {
 					$permission = $annotPermission->name;
-					AclManager::addPermission($annotPermission->name, $annotPermission->level);
+					AclManager::addPermission($annotPermission->name, $annotPermission->level ?? 0);
 					$hasPermission = true;
 					$this->permissionMap->addAction($controller, $action, $resource, $annotPermission->name);
 				} elseif ($annotResource) {
