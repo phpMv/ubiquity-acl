@@ -123,6 +123,20 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals($result, $res);
 	}
 
+	protected function removeAcls() {
+		AclManager::removeResource('IndexResource');
+		AclManager::removeResource('Other');
+		AclManager::removeResource('TestController.allowOther2');
+		AclManager::removeAcl('@ALL', 'Home', 'ALLOW');
+		AclManager::removeAcl('@OTHER', 'Other', 'ALLOW_OTHER');
+		AclManager::removeAcl('@OTHER', 'TestController.allowOther2', 'ALL');
+		AclManager::removePermission('ALLOW');
+		AclManager::removePermission('ALLOW_OTHER');
+		AclManager::removePermission('NEW_PERMISSION');
+		AclManager::removePermission('ADMIN');
+		AclManager::removeRole('@OTHER');
+	}
+
 	/**
 	 * Tests AclManager::initCache()
 	 */
@@ -139,17 +153,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertFalse(AclManager::isAllowed('@ALL', 'Home', 'ADMIN'));
 		$this->assertFalse(AclManager::isAllowed('@OTHER', 'Home', 'ADMIN'));
 
-		AclManager::removeResource('IndexResource');
-		AclManager::removeResource('Other');
-		AclManager::removeResource('TestController.allowOther2');
-		AclManager::removeAcl('@ALL', 'Home', 'ALLOW');
-		AclManager::removeAcl('@OTHER', 'Other', 'ALLOW_OTHER');
-		AclManager::removeAcl('@OTHER', 'TestController.allowOther2', 'ALL');
-		AclManager::removePermission('ALLOW');
-		AclManager::removePermission('ALLOW_OTHER');
-		AclManager::removePermission('NEW_PERMISSION');
-		AclManager::removePermission('ADMIN');
-		AclManager::removeRole('@OTHER');
+		$this->removeAcls();
 		$this->assertEquals(3, count(AclManager::getRoles()));
 		$this->assertEquals(3, count(AclManager::getResources()));
 		$this->assertEquals(1, \count(AclManager::getAcls()));
@@ -190,6 +194,9 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			$_GET["c"] = 'TestController/allowOther';
 			Startup::run($config);
 		}, '@ALL is not allowed!');
+
+		$this->removeAcls();
+		AclManager::saveAll();
 	}
 }
 
