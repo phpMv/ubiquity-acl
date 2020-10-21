@@ -77,7 +77,7 @@ class TestController extends Controller {
 	 * @see \Ubiquity\controllers\Controller::onInvalidControl()
 	 */
 	public function onInvalidControl() {
-		echo $this->_getRole() . ' not allowed!';
+		echo $this->_getRole() . ' is not allowed!';
 	}
 }
 
