@@ -178,6 +178,18 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			$_GET["c"] = 'TestController';
 			Startup::run($config);
 		}, 'index');
+
+		$this->_assertDisplayEquals(function () use ($config) {
+			$_GET['role'] = '@OTHER';
+			$_GET["c"] = 'TestController/allowOther';
+			Startup::run($config);
+		}, 'allowOther');
+
+		$this->_assertDisplayEquals(function () use ($config) {
+			$_GET['role'] = '@USER';
+			$_GET["c"] = 'TestController/allowOther';
+			Startup::run($config);
+		}, '@USER is not allowed!');
 	}
 }
 
