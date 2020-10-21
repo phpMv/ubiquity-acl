@@ -3,6 +3,7 @@ use Ubiquity\cache\CacheManager;
 use Ubiquity\security\acl\AclManager;
 use Ubiquity\security\acl\persistence\AclCacheProvider;
 use Ubiquity\exceptions\AclException;
+use Ubiquity\controllers\Startup;
 
 /**
  * AclCacheProvider test case.
@@ -87,10 +88,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::isAllowed('USER', 'Home', 'DELETE');
 	}
 
-	/**
-	 * Tests AclManager::initCache()
-	 */
-	public function testInitCache() {
+	protected function initTestController() {
 		$config = [
 			"cache" => [
 				"directory" => "cache/",
@@ -112,6 +110,24 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::initFromProviders([
 			new AclCacheProvider()
 		]);
+	}
+
+	protected function _display($callback) {
+		ob_start();
+		$callback();
+		return ob_get_clean();
+	}
+
+	protected function _assertDisplayEquals($callback, $result) {
+		$res = $this->_display($callback);
+		$this->assertEquals($result, $res);
+	}
+
+	/**
+	 * Tests AclManager::initCache()
+	 */
+	public function testInitCache() {
+		$this->initTestController();
 		$this->assertEquals(4, count(AclManager::getRoles()));
 		$this->assertEquals(4, \count(AclManager::getAcls()));
 		$this->assertEquals(6, count(AclManager::getResources()));
@@ -139,6 +155,29 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals(1, \count(AclManager::getAcls()));
 		$this->assertEquals(3, count(AclManager::getPermissions()));
 		AclManager::saveAll();
+	}
+
+	/**
+	 * Tests AclManager::getPermissionMap()
+	 */
+	public function navigation() {
+		$this->initTestController();
+
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		$config = [
+			"cache" => [
+				"directory" => "cache/",
+				"system" => "Ubiquity\\cache\\system\\ArrayCache",
+				"params" => []
+			],
+			"mvcNS" => [
+				"controllers" => "controllers"
+			]
+		];
+		$this->_assertDisplayEquals(function () use ($config) {
+			$_GET["c"] = 'TestController';
+			Startup::run($config);
+		}, 'index');
 	}
 }
 

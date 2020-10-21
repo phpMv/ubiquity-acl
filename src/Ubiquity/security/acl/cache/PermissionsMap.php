@@ -38,6 +38,16 @@ class PermissionsMap {
 		];
 	}
 
+	/**
+	 *
+	 * @param string $controller
+	 * @param string $action
+	 * @return array|NULL
+	 */
+	public function getRessourcePermission(string $controller, string $action) {
+		return $this->arrayMap[$this->getKey($controller, $action)] ?? null;
+	}
+
 	public function save() {
 		CacheManager::$cache->store($this->getRootKey(self::CACHE_KEY), $this->arrayMap);
 	}

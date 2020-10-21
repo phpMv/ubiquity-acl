@@ -13,6 +13,7 @@ use Ubiquity\cache\CacheManager;
 use Ubiquity\annotations\acl\AllowAnnotation;
 use Ubiquity\annotations\acl\ResourceAnnotation;
 use Ubiquity\annotations\acl\PermissionAnnotation;
+use Ubiquity\security\acl\cache\PermissionsMap;
 
 /**
  * Ubiquity\security\acl$AclManager
@@ -29,6 +30,12 @@ class AclManager {
 	 * @var AclList
 	 */
 	protected static $aclList;
+
+	/**
+	 *
+	 * @var PermissionsMap
+	 */
+	protected static $permissionMap;
 
 	/**
 	 * Create AclList with default roles and resources.
@@ -188,6 +195,14 @@ class AclManager {
 			}
 		}
 		$parser->save();
+	}
+
+	public static function getPermissionMap() {
+		if (! isset(self::$permissionMap)) {
+			self::$permissionMap = new PermissionsMap();
+			self::$permissionMap->load();
+		}
+		return self::$permissionMap;
 	}
 }
 

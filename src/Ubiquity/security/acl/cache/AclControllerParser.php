@@ -71,7 +71,6 @@ class AclControllerParser {
 					$resource = $annotResource->name;
 					AclManager::addResource($annotResource->name, $controller . '.' . $action);
 				}
-
 				if ($annotPermission) {
 					$permission = $annotPermission->name;
 					AclManager::addPermission($annotPermission->name, $annotPermission->level ?? 0);
@@ -84,7 +83,9 @@ class AclControllerParser {
 				if (\is_array($annotsAllow) && \count($annotsAllow) > 0) {
 					$this->addAllows($annotsAllow, $controller, $action, $resource, $permission);
 				}
-				$this->permissionMap->addAction($controller, $action, $resource, $permission);
+				if ($permission !== null && $resource !== null) {
+					$this->permissionMap->addAction($controllerClass, $action, $resource, $permission);
+				}
 			} catch (\Exception $e) {
 				// Exception in controller code
 			}
