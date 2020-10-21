@@ -27,7 +27,7 @@ trait AclControllerTrait {
 		$controller = \get_class($this);
 		$resourceController = AclManager::getPermissionMap()->getRessourcePermission($controller, $action);
 		if (isset($resourceController)) {
-			return AclManager::isAllowed($this->_getRole(), $resourceController['ressource'], $resourceController['permission']);
+			return AclManager::isAllowed($this->_getRole(), $resourceController['resource'], $resourceController['permission']);
 		}
 		return true;
 	}
