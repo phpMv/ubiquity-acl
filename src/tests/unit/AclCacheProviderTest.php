@@ -160,7 +160,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 	/**
 	 * Tests AclManager::getPermissionMap()
 	 */
-	public function navigation() {
+	public function testNavigation() {
 		$this->initTestController();
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
