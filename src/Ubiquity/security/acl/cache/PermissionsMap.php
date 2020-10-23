@@ -59,5 +59,9 @@ class PermissionsMap {
 	public function load() {
 		$this->arrayMap = CacheManager::$cache->fetch($this->getRootKey(self::CACHE_KEY));
 	}
+
+	public function getMap() {
+		return $this->arrayMap;
+	}
 }
 
