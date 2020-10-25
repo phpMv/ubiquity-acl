@@ -79,5 +79,9 @@ class TestController extends Controller {
 	public function onInvalidControl() {
 		echo $this->_getRole() . ' is not allowed!';
 	}
+
+	public function added() {
+		echo "added!";
+	}
 }
 

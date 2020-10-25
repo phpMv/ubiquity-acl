@@ -152,26 +152,54 @@ class AclManager {
 		return self::$aclList->isAllowed($role, $resource ?? '*', $permission ?? 'ALL');
 	}
 
+	/**
+	 * Save all acls,roles, resources and permissions for AclProviders with no autoSave.
+	 */
 	public static function saveAll() {
 		self::$aclList->saveAll();
 	}
 
+	/**
+	 *
+	 * @param string $role
+	 */
 	public static function removeRole(string $role) {
 		self::$aclList->removeRole($role);
 	}
 
+	/**
+	 *
+	 * @param string $permission
+	 */
 	public static function removePermission(string $permission) {
 		self::$aclList->removePermission($permission);
 	}
 
+	/**
+	 *
+	 * @param string $resource
+	 */
 	public static function removeResource(string $resource) {
 		self::$aclList->removeResource($resource);
 	}
 
+	/**
+	 *
+	 * @param string $role
+	 * @param string $resource
+	 * @param string $permission
+	 */
 	public static function removeAcl(string $role, string $resource, string $permission = null) {
 		self::$aclList->removeAcl($role, $resource, $permission);
 	}
 
+	/**
+	 * Initialize acls cache with controllers annotations.
+	 * Do not execute at runtime
+	 *
+	 * @param array $config
+	 * @throws \Ubiquity\exceptions\AclException
+	 */
 	public static function initCache(&$config) {
 		CacheManager::start($config);
 		CacheManager::registerAnnotations([
@@ -197,12 +225,29 @@ class AclManager {
 		$parser->save();
 	}
 
+	/**
+	 *
+	 * @return \Ubiquity\security\acl\cache\PermissionsMap
+	 */
 	public static function getPermissionMap() {
 		if (! isset(self::$permissionMap)) {
 			self::$permissionMap = new PermissionsMap();
 			self::$permissionMap->load();
 		}
 		return self::$permissionMap;
+	}
+
+	/**
+	 *
+	 * @param string $controller
+	 * @param string $action
+	 * @param string $resource
+	 * @param string $permission
+	 */
+	public static function associate(string $controller, string $action, string $resource, string $permission = 'ALL') {
+		self::$aclList->getResourceByName($resource);
+		self::$aclList->getPermissionByName($permission);
+		self::$permissionMap->addAction($controller, $action, $resource, $permission);
 	}
 }
 

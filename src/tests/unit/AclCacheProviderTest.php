@@ -4,6 +4,7 @@ use Ubiquity\security\acl\AclManager;
 use Ubiquity\security\acl\persistence\AclCacheProvider;
 use Ubiquity\exceptions\AclException;
 use Ubiquity\controllers\Startup;
+use controllers\TestController;
 
 /**
  * AclCacheProvider test case.
@@ -194,6 +195,32 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			$_GET["c"] = 'TestController/allowOther';
 			Startup::run($config);
 		}, '@ALL is not allowed!');
+
+		$this->_assertDisplayEquals(function () use ($config) {
+			$_GET['role'] = '@OTHER';
+			$_GET["c"] = 'TestController/added';
+			Startup::run($config);
+		}, 'added!');
+
+		$this->_assertDisplayEquals(function () use ($config) {
+			$_GET['role'] = '@ALL';
+			$_GET["c"] = 'TestController/added';
+			Startup::run($config);
+		}, 'added!');
+
+		AclManager::associate(TestController::class, 'added', 'Other', 'ALLOW_OTHER');
+
+		$this->_assertDisplayEquals(function () use ($config) {
+			$_GET['role'] = '@ALL';
+			$_GET["c"] = 'TestController/added';
+			Startup::run($config);
+		}, '@ALL is not allowed!');
+
+		$this->_assertDisplayEquals(function () use ($config) {
+			$_GET['role'] = '@OTHER';
+			$_GET["c"] = 'TestController/added';
+			Startup::run($config);
+		}, 'added!');
 
 		$this->removeAcls();
 		AclManager::saveAll();
