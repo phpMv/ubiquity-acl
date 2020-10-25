@@ -28,7 +28,7 @@ class PermissionsMap {
 	}
 
 	protected function getKey($controller, $action) {
-		return \crc32($controller . $action) . '_';
+		return "$controller.$action";
 	}
 
 	public function addAction(string $controller, string $action, ?string $resource = '*', ?string $permission = 'ALL') {
@@ -61,7 +61,13 @@ class PermissionsMap {
 	}
 
 	public function getMap() {
-		return $this->arrayMap;
+		$result = [];
+		foreach ($this->arrayMap as $k => $v) {
+			$result[] = [
+				'controller.action' => $k
+			] + $v;
+		}
+		return $result;
 	}
 }
 
