@@ -69,5 +69,9 @@ abstract class AbstractAclPart {
 	public function setId($id) {
 		$this->id = $id;
 	}
+
+	public function __toString() {
+		return $this->name;
+	}
 }
 
