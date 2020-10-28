@@ -7,11 +7,17 @@
 Access control lists for Ubiquity framework
 
 ## Samples
-
+### Defining ACLs at runtime
+#### One by one
 ```php
 AclManager::start();
 AclManager::addRole('@USER');
 AclManager::addResource('Home');
 AclManager::addPermission('READ',1);
 AclManager::allow('@USER','Home','READ');
+```
+#### By grouping
+```php
+AclManager::start();
+AclManager::addAndAllow('@USER','Home','READ');
 ```
