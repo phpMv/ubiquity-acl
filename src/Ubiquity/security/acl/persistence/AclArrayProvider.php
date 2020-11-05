@@ -6,6 +6,7 @@ use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
 use Ubiquity\exceptions\AclException;
+use Ubiquity\security\acl\models\AbstractAclPart;
 
 /**
  * Ubiquity\security\acl\persistence$AclArrayProvider
@@ -108,6 +109,22 @@ abstract class AclArrayProvider implements AclProviderInterface {
 			}
 		}
 		unset($this->parts[\get_class($part)][$name]);
+	}
+
+	public function existPart(AbstractAclPart $part): bool {
+		$name = $part->getName();
+		if ($part instanceof Resource) {
+			$field = 'resource';
+		} elseif ($part instanceof Role) {
+			$field = 'role';
+		} else {
+			$field = 'permission';
+		}
+		return isset($this->parts[$field][$name]);
+	}
+
+	public function existAcl(AclElement $aclElement): bool {
+		return isset($this->aclsArray[$aclElement->getId_()]);
 	}
 }
 

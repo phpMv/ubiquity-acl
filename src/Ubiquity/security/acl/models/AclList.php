@@ -238,5 +238,47 @@ class AclList {
 		}
 		return false;
 	}
+
+	/**
+	 *
+	 * @param string $providerClass
+	 * @return \Ubiquity\security\acl\persistence\AclProviderInterface|NULL
+	 */
+	public function getProvider(string $providerClass) {
+		foreach ($this->providers as $prov) {
+			if ($prov instanceof $providerClass) {
+				return $prov;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 *
+	 * @param AbstractAclPart $part
+	 * @param string $providerClass
+	 * @return boolean
+	 */
+	public function existPartIn(AbstractAclPart $part, string $providerClass) {
+		$prov = $this->getProvider($providerClass);
+		if (isset($prov)) {
+			return $prov->existPart($part);
+		}
+		return false;
+	}
+
+	/**
+	 *
+	 * @param AclElement $elm
+	 * @param string $providerClass
+	 * @return boolean
+	 */
+	public function existAclIn(AclElement $elm, string $providerClass) {
+		$prov = $this->getProvider($providerClass);
+		if (isset($prov)) {
+			return $prov->existAcl($elm);
+		}
+		return false;
+	}
 }
 

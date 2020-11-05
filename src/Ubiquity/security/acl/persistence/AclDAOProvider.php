@@ -2,6 +2,7 @@
 namespace Ubiquity\security\acl\persistence;
 
 use Ubiquity\orm\DAO;
+use Ubiquity\security\acl\models\AbstractAclPart;
 use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\Resource;
@@ -140,5 +141,13 @@ class AclDAOProvider implements AclProviderInterface {
 	}
 
 	public function saveAll(): void {}
+
+	public function existPart(AbstractAclPart $part): bool {
+		return DAO::exists(\get_class($part));
+	}
+
+	public function existAcl(AclElement $aclElement): bool {
+		return DAO::exists(\get_class($aclElement));
+	}
 }
 

@@ -14,6 +14,8 @@ use Ubiquity\annotations\acl\AllowAnnotation;
 use Ubiquity\annotations\acl\ResourceAnnotation;
 use Ubiquity\annotations\acl\PermissionAnnotation;
 use Ubiquity\security\acl\cache\PermissionsMap;
+use Ubiquity\security\acl\models\AbstractAclPart;
+use Ubiquity\security\acl\models\AclElement;
 
 /**
  * Ubiquity\security\acl$AclManager
@@ -248,6 +250,35 @@ class AclManager {
 		self::$aclList->getResourceByName($resource);
 		self::$aclList->getPermissionByName($permission);
 		self::$permissionMap->addAction($controller, $action, $resource, $permission);
+	}
+
+	/**
+	 *
+	 * @param AbstractAclPart $part
+	 * @param string $providerClass
+	 * @return boolean
+	 */
+	public static function existPartIn(AbstractAclPart $part, string $providerClass) {
+		return self::$aclList->existPartIn($part, $providerClass);
+	}
+
+	/**
+	 *
+	 * @param AclElement $elm
+	 * @param string $providerClass
+	 * @return boolean
+	 */
+	public static function existAclIn(AclElement $elm, string $providerClass) {
+		return self::$aclList->existAclIn($elm, $providerClass);
+	}
+
+	/**
+	 *
+	 * @param string $providerClass
+	 * @return \Ubiquity\security\acl\persistence\AclProviderInterface|NULL
+	 */
+	public static function getProvider(string $providerClass) {
+		return self::$aclList->getProvider($providerClass);
 	}
 }
 
