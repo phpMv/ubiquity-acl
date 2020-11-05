@@ -47,7 +47,7 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals(3, count(AclManager::getResources()));
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'READ'));
 		$this->assertInstanceOf(AclDAOProvider::class, AclManager::getProvider(AclDAOProvider::class));
-		$this->assertTrue(AclManager::existPartIn(current(AclManager::getRoles()), AclDAOProvider::class));
+		$this->assertTrue(AclManager::existPartIn(AclManager::getAclList()->getRoleByName('USER'), AclDAOProvider::class));
 		$this->assertTrue(AclManager::existAclIn(current(AclManager::getAcls()), AclDAOProvider::class));
 		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
 		AclManager::allow('USER', 'Home', 'WRITE');
