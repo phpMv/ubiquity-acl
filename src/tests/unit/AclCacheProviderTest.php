@@ -36,7 +36,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals(3, count(AclManager::getResources()));
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'READ'));
 		$this->assertInstanceOf(AclCacheProvider::class, AclManager::getProvider(AclCacheProvider::class));
-		$this->assertTrue(AclManager::existPartIn(AclManager::getAclList()->getRoleByName('USER'), AclCacheProvider::class));
+		$this->assertTrue(AclManager::existPartIn(AclManager::getAclList()->getRoleByName('@OTHER'), AclCacheProvider::class));
 		$this->assertTrue(AclManager::existAclIn(current(AclManager::getAcls()), AclCacheProvider::class));
 		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
 		AclManager::allow('USER', 'Home', 'WRITE');
