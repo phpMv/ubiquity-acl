@@ -112,15 +112,7 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	}
 
 	public function existPart(AbstractAclPart $part): bool {
-		$name = $part->getName();
-		if ($part instanceof Resource) {
-			$field = 'resource';
-		} elseif ($part instanceof Role) {
-			$field = 'role';
-		} else {
-			$field = 'permission';
-		}
-		return isset($this->parts[$field][$name]);
+		return isset($this->parts[\get_class($part)][$part->getName()]);
 	}
 
 	public function existAcl(AclElement $aclElement): bool {
