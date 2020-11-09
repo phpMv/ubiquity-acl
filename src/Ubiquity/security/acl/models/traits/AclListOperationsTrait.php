@@ -16,9 +16,10 @@ use Ubiquity\security\acl\persistence\AclProviderInterface;
  * @version 1.0.0
  * @property Role[] $roles
  * @property Resource[] $resources
- * @property Permission[] $permissons
+ * @property Permission[] $permissions
  * @property AclProviderInterface[] $providers
- * @property array elementsCache
+ * @property array $elementsCache
+ * @property AclElement[] $acls
  *
  */
 trait AclListOperationsTrait {
@@ -28,6 +29,10 @@ trait AclListOperationsTrait {
 	abstract public function getResourceByName(string $name);
 
 	abstract public function getPermissionByName(string $name);
+
+	abstract public function init();
+
+	abstract protected function elementExistByName(string $name, array $inArray): bool;
 
 	public function saveAclElement(AclElement $aclElement) {
 		foreach ($this->providers as $provider) {
