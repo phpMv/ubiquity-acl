@@ -2,6 +2,7 @@
 namespace Ubiquity\security\acl\models\traits;
 
 use Ubiquity\security\acl\models\AclElement;
+use Ubiquity\security\acl\models\AbstractAclPart;
 
 /**
  *
