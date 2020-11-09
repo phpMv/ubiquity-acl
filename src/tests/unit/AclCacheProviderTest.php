@@ -108,10 +108,6 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 				"controllers" => "controllers"
 			]
 		];
-		$this->assertEquals(3, count(AclManager::getResources()));
-		$this->assertEquals(1, \count(AclManager::getAcls()));
-		$this->assertEquals(3, count(AclManager::getRoles()));
-		$this->assertEquals(3, count(AclManager::getPermissions()));
 
 		AclManager::initCache($config);
 
