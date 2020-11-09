@@ -68,9 +68,16 @@ class AclList {
 	}
 
 	public function init() {
-		$this->roles['role_@ALL'] = new Role('@ALL');
-		$this->resources['res_*'] = new Resource('*');
-		$this->permissions['perm_ALL'] = new Permission('ALL', 1000);
+		$this->roles = [
+			'role_@ALL' => new Role('@ALL')
+		];
+		$this->resources = [
+			'res_*' => new Resource('*')
+		];
+		$this->permissions = [
+			'perm_ALL' => new Permission('ALL', 1000)
+		];
+		$this->elementsCache = [];
 		$this->acls = [];
 	}
 

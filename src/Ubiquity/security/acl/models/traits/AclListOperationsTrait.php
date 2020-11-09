@@ -113,10 +113,6 @@ trait AclListOperationsTrait {
 	}
 
 	public function clear() {
-		$this->roles = [];
-		$this->resources = [];
-		$this->permissions = [];
-		$this->elementsCache = [];
 		$this->init();
 	}
 
