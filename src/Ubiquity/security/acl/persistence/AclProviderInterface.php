@@ -58,5 +58,7 @@ interface AclProviderInterface {
 	public function isAutosave(): bool;
 
 	public function saveAll(): void;
+
+	public function getDetails(): array;
 }
 

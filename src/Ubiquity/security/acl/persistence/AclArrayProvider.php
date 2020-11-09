@@ -112,7 +112,8 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	}
 
 	public function existPart(AbstractAclPart $part): bool {
-		return isset($this->parts[\get_class($part)][$part->getName()]);
+		$name = $part->getName();
+		return isset($this->parts[\get_class($part)][$name]);
 	}
 
 	public function existAcl(AclElement $aclElement): bool {

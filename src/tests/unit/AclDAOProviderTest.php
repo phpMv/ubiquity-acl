@@ -105,6 +105,40 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 		AclManager::isAllowed('USER', 'Home', 'DELETE');
 	}
 
+	/*
+	 * Tests AclManager::reloadFromSelectedProviders()
+	 */
+	public function testReloadFromSelectedProviders() {
+		$this->assertEquals(1, \count(AclManager::getAcls()));
+		$this->assertEquals(3, count(AclManager::getRoles()));
+		$this->assertEquals(3, count(AclManager::getPermissions()));
+		$this->assertEquals(3, count(AclManager::getResources()));
+
+		AclManager::reloadFromSelectedProviders([]);
+		$this->assertEquals(1, count(AclManager::getResources()));
+		$this->assertEquals(1, count(AclManager::getRoles()));
+		$this->assertEquals(1, count(AclManager::getPermissions()));
+		$this->assertEquals(0, count(AclManager::getAcls()));
+
+		AclManager::reloadFromSelectedProviders('*');
+		$this->assertEquals(1, \count(AclManager::getAcls()));
+		$this->assertEquals(3, count(AclManager::getRoles()));
+		$this->assertEquals(3, count(AclManager::getPermissions()));
+		$this->assertEquals(3, count(AclManager::getResources()));
+
+		AclManager::reloadFromSelectedProviders([
+			AclDAOProvider::class
+		]);
+		$this->assertEquals(1, \count(AclManager::getAcls()));
+		$this->assertEquals(3, count(AclManager::getRoles()));
+		$this->assertEquals(3, count(AclManager::getPermissions()));
+		$this->assertEquals(3, count(AclManager::getResources()));
+
+		$this->assertEqualsCanonicalizing([
+			AclDAOProvider::class
+		], AclManager::getAclList()->getProviderClasses());
+	}
+
 	protected function initProvider() {
 		AclManager::initFromProviders([
 			new AclDAOProvider([

@@ -52,6 +52,7 @@ abstract class AbstractAclPart {
 		foreach ($values as $k => $v) {
 			$this->$k = $v;
 		}
+		$this->_fromArray = true;
 	}
 
 	/**
@@ -60,6 +61,10 @@ abstract class AbstractAclPart {
 	 */
 	public function getId() {
 		return $this->id;
+	}
+
+	public function getId_() {
+		return $this->name;
 	}
 
 	/**

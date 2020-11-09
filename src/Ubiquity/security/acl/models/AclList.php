@@ -4,6 +4,7 @@ namespace Ubiquity\security\acl\models;
 use Ubiquity\security\acl\persistence\AclProviderInterface;
 use Ubiquity\exceptions\AclException;
 use Ubiquity\security\acl\models\traits\AclListOperationsTrait;
+use Ubiquity\security\acl\models\traits\AclListQueryTrait;
 
 /**
  * Ubiquity\security\acl\models$AclList
@@ -14,7 +15,7 @@ use Ubiquity\security\acl\models\traits\AclListOperationsTrait;
  *
  */
 class AclList {
-	use AclListOperationsTrait;
+	use AclListOperationsTrait,AclListQueryTrait;
 
 	/**
 	 *
@@ -165,6 +166,14 @@ class AclList {
 		$this->providers = $providers;
 	}
 
+	public function clear() {
+		$this->roles = [];
+		$this->resources = [];
+		$this->permissions = [];
+		$this->elementsCache = [];
+		$this->init();
+	}
+
 	public function addRole(Role $role) {
 		$this->roles[$role->getName()] = $role;
 		$this->savePart($role);
@@ -279,6 +288,28 @@ class AclList {
 			return $prov->existAcl($elm);
 		}
 		return false;
+	}
+
+	/**
+	 *
+	 * @param string $id_
+	 * @return ?AclElement
+	 */
+	public function getAclById_(string $id_): ?AclElement {
+		foreach ($this->acls as $acl) {
+			if ($acl->getId_() === $id_) {
+				return $acl;
+			}
+		}
+		return null;
+	}
+
+	public function getProviderClasses() {
+		$result = [];
+		foreach ($this->providers as $prov) {
+			$result[] = \get_class($prov);
+		}
+		return $result;
 	}
 }
 

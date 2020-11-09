@@ -61,5 +61,11 @@ class AclCacheProvider extends AclArrayProvider {
 			CacheManager::$cache->store($this->getRootKey($class), $this->parts[$class]);
 		}
 	}
+
+	public function getDetails(): array {
+		return [
+			'lock' => 'In memory or annotations cache'
+		];
+	}
 }
 

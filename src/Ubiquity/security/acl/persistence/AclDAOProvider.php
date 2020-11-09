@@ -149,5 +149,14 @@ class AclDAOProvider implements AclProviderInterface {
 	public function existAcl(AclElement $aclElement): bool {
 		return DAO::exists(\get_class($aclElement));
 	}
+
+	public function getDetails(): array {
+		return [
+			'user' => $this->RoleClass,
+			'archive' => $this->resourceClass,
+			'unlock alternate' => $this->permissionClass,
+			'lock' => $this->aclClass
+		];
+	}
 }
 

@@ -62,6 +62,21 @@ class AclManager {
 		}
 	}
 
+	/**
+	 *
+	 * @param array|string $selectedProviders
+	 */
+	public static function reloadFromSelectedProviders($selectedProviders = '*') {
+		self::$aclList->clear();
+		$providers = [];
+		foreach (self::$aclList->getProviders() as $prov) {
+			if ($selectedProviders === '*' || \array_search(\get_class($prov), $selectedProviders) !== false) {
+				$providers[] = $prov;
+			}
+		}
+		self::initFromProviders($providers);
+	}
+
 	public static function addRole(string $name, ?array $parents = []) {
 		self::$aclList->addRole(new Role($name, $parents));
 	}
