@@ -119,13 +119,13 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals(1, count(AclManager::getRoles()));
 		$this->assertEquals(1, count(AclManager::getPermissions()));
 		$this->assertEquals(0, count(AclManager::getAcls()));
-
+		$this->initProvider();
 		AclManager::reloadFromSelectedProviders('*');
 		$this->assertEquals(1, \count(AclManager::getAcls()));
 		$this->assertEquals(3, count(AclManager::getRoles()));
 		$this->assertEquals(3, count(AclManager::getPermissions()));
 		$this->assertEquals(3, count(AclManager::getResources()));
-
+		$this->initProvider();
 		AclManager::reloadFromSelectedProviders([
 			AclDAOProvider::class
 		]);
