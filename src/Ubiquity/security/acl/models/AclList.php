@@ -166,55 +166,6 @@ class AclList {
 		$this->providers = $providers;
 	}
 
-	public function clear() {
-		$this->roles = [];
-		$this->resources = [];
-		$this->permissions = [];
-		$this->elementsCache = [];
-		$this->init();
-	}
-
-	public function addRole(Role $role) {
-		$this->roles[$role->getName()] = $role;
-		$this->savePart($role);
-	}
-
-	public function addResource(Resource $resource) {
-		$this->resources[$resource->getName()] = $resource;
-		$this->savePart($resource);
-	}
-
-	public function addPermission(Permission $permission) {
-		$this->permissions[$permission->getName()] = $permission;
-		$this->savePart($permission);
-	}
-
-	public function setPermissionLevel(string $name, int $level) {
-		$perm = $this->getPermissionByName($name);
-		$perm->setLevel($level);
-		$this->updatePart($perm);
-	}
-
-	public function allow(string $roleName, string $resourceName, string $permissionName) {
-		$aclElm = new AclElement();
-		$aclElm->allow($this->getRoleByName($roleName), $this->getResourceByName($resourceName), $this->getPermissionByName($permissionName));
-		$this->acls[] = $aclElm;
-		$this->saveAclElement($aclElm);
-	}
-
-	public function addAndAllow(string $roleName, string $resourceName, string $permissionName) {
-		if (! $this->elementExistByName($roleName, $this->roles)) {
-			$this->addRole(new Role($roleName));
-		}
-		if ($resourceName !== '*' && ! $this->elementExistByName($resourceName, $this->resources)) {
-			$this->addResource(new Resource($resourceName));
-		}
-		if ($permissionName !== 'ALL' && ! $this->elementExistByName($permissionName, $this->permissions)) {
-			$this->addPermission(new Permission($permissionName));
-		}
-		$this->allow($roleName, $resourceName ?? '*', $permissionName ?? 'ALL');
-	}
-
 	public function getRolePermissionsOn(string $roleName, $resourceName = '*'): array {
 		$role = $this->getRoleByName($roleName);
 		$parents = $role->getParentsArray();
