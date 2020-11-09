@@ -3,6 +3,10 @@ namespace Ubiquity\security\acl\models\traits;
 
 use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\models\AbstractAclPart;
+use Ubiquity\security\acl\models\Role;
+use Ubiquity\security\acl\models\Resource;
+use Ubiquity\security\acl\models\Permission;
+use Ubiquity\security\acl\persistence\AclProviderInterface;
 
 /**
  * Ubiquity\security\acl\models\traits$AclListOperations
@@ -10,6 +14,11 @@ use Ubiquity\security\acl\models\AbstractAclPart;
  *
  * @author jc
  * @version 1.0.0
+ * @property Role[] $roles
+ * @property Resource[] $resources
+ * @property Permission[] $permissons
+ * @property AclProviderInterface[] $providers
+ * @property array elementsCache
  *
  */
 trait AclListOperationsTrait {
