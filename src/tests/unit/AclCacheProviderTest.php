@@ -21,6 +21,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		];
 		CacheManager::startProd($config);
 		AclManager::start();
+		AclManager::getAclList()->clear();
 		AclManager::initFromProviders([
 			new AclCacheProvider()
 		]);
