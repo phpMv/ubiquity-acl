@@ -17,6 +17,8 @@ trait AclListQueryTrait {
 
 	abstract public function getPermissionByName(string $name);
 
+	abstract public function getProvider(string $providerClass);
+
 	public function getAclsWithRole(string $role) {
 		$result = [];
 		foreach ($this->acls as $acl) {
