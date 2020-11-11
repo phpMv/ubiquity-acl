@@ -204,7 +204,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			$_GET['role'] = '@OTHER';
 			$_GET["c"] = 'TestController/added';
 			Startup::run($config);
-		}, 'added!');
+		}, '@OTHER is not allowed!');
 
 		$this->_assertDisplayEquals(function () use ($config) {
 			$_GET['role'] = '@ALL';
