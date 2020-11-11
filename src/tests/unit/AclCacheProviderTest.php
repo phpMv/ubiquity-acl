@@ -210,7 +210,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			$_GET['role'] = '@ALL';
 			$_GET["c"] = 'TestController/added';
 			Startup::run($config);
-		}, 'added!');
+		}, '@ALL is not allowed!');
 
 		AclManager::associate(TestController::class, 'added', 'Other', 'ALLOW_OTHER');
 
@@ -219,12 +219,6 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			$_GET["c"] = 'TestController/added';
 			Startup::run($config);
 		}, '@ALL is not allowed!');
-
-		$this->_assertDisplayEquals(function () use ($config) {
-			$_GET['role'] = '@OTHER';
-			$_GET["c"] = 'TestController/added';
-			Startup::run($config);
-		}, 'added!');
 
 		$this->removeAcls();
 		AclManager::saveAll();
