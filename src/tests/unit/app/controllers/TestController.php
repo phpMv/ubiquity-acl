@@ -68,7 +68,7 @@ class TestController extends Controller {
 	}
 
 	public function _getRole() {
-		return $_GET['role'];
+		return $_GET['role'] ?? 'nobody';
 	}
 
 	/**
