@@ -29,7 +29,7 @@ trait AclControllerTrait {
 		if (isset($resourceController)) {
 			return AclManager::isAllowed($this->_getRole(), $resourceController['resource'], $resourceController['permission']);
 		}
-		return true;
+		return false;
 	}
 }
 
