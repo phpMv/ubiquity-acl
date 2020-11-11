@@ -224,4 +224,3 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::saveAll();
 	}
 }
-

@@ -28,7 +28,6 @@ build:
 filter:
     paths: ["src/Ubiquity/*"]
     excluded_paths:
-        - src/Ubiquity/security/acl/display/*
 
 checks:
     php:
