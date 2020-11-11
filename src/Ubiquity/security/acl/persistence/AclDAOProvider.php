@@ -7,6 +7,7 @@ use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
+use Ubiquity\orm\OrmUtils;
 
 /**
  * Load and save Acls with a database using DAO.
@@ -21,7 +22,7 @@ class AclDAOProvider implements AclProviderInterface {
 
 	protected $aclClass;
 
-	protected $RoleClass;
+	protected $roleClass;
 
 	protected $permissionClass;
 
@@ -34,7 +35,7 @@ class AclDAOProvider implements AclProviderInterface {
 	 */
 	public function __construct($classes = []) {
 		$this->aclClass = $classes['acl'] ?? AclElement::class;
-		$this->RoleClass = $classes['role'] ?? Role::class;
+		$this->roleClass = $classes['role'] ?? Role::class;
 		$this->resourceClass = $classes['resource'] ?? Resource::class;
 		$this->permissionClass = $classes['permission'] ?? Permission::class;
 	}
@@ -42,7 +43,7 @@ class AclDAOProvider implements AclProviderInterface {
 	public function setDbOffset($dbOffset = 'default') {
 		DAO::setModelDatabase($this->aclClass, $dbOffset);
 		DAO::setModelDatabase($this->resourceClass, $dbOffset);
-		DAO::setModelDatabase($this->RoleClass, $dbOffset);
+		DAO::setModelDatabase($this->roleClass, $dbOffset);
 		DAO::setModelDatabase($this->permissionClass, $dbOffset);
 	}
 
@@ -106,7 +107,7 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::loadAllRoles()
 	 */
 	public function loadAllRoles(): array {
-		return $this->loadElements($this->RoleClass);
+		return $this->loadElements($this->roleClass);
 	}
 
 	/**
@@ -152,11 +153,26 @@ class AclDAOProvider implements AclProviderInterface {
 
 	public function getDetails(): array {
 		return [
-			'user' => $this->RoleClass,
+			'user' => $this->roleClass,
 			'archive' => $this->resourceClass,
 			'unlock alternate' => $this->permissionClass,
 			'lock' => $this->aclClass
 		];
+	}
+
+	public function getModelClassesSwap(): array {
+		$swap = [
+			AclElement::class => $this->aclClass,
+			Role::class => $this->roleClass,
+			Resource::class => $this->resourceClass,
+			Permission::class => $this->permissionClass
+		];
+		$classes = \array_values($swap);
+		$result = [];
+		foreach ($classes as $class) {
+			$result[$class] = $swap;
+		}
+		return $result;
 	}
 }
 

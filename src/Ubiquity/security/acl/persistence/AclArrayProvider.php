@@ -119,5 +119,9 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	public function existAcl(AclElement $aclElement): bool {
 		return isset($this->aclsArray[$aclElement->getId_()]);
 	}
+
+	public function getModelClassesSwap(): array {
+		return [];
+	}
 }
 

@@ -295,5 +295,16 @@ class AclManager {
 	public static function getProvider(string $providerClass) {
 		return self::$aclList->getProvider($providerClass);
 	}
+
+	public static function getModelClassesSwap(): array {
+		$result = [];
+		$aclList = self::getAclList();
+		if (isset($aclList)) {
+			foreach ($aclList->getProviders() as $prov) {
+				$result += $prov->getModelClassesSwap();
+			}
+		}
+		return $result;
+	}
 }
 
