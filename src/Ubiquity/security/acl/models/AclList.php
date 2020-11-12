@@ -79,6 +79,7 @@ class AclList {
 		];
 		$this->elementsCache = [];
 		$this->acls = [];
+		$this->providers = [];
 	}
 
 	public function getRoleByName(string $name) {
