@@ -67,6 +67,10 @@ class AclList {
 		return false;
 	}
 
+	public function __construct() {
+		$this->providers = [];
+	}
+
 	public function init() {
 		$this->roles = [
 			'role_@ALL' => new Role('@ALL')
@@ -79,7 +83,6 @@ class AclList {
 		];
 		$this->elementsCache = [];
 		$this->acls = [];
-		$this->providers = [];
 	}
 
 	public function getRoleByName(string $name) {
