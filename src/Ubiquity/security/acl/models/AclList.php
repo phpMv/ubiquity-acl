@@ -69,6 +69,7 @@ class AclList {
 
 	public function __construct() {
 		$this->providers = [];
+		$this->init();
 	}
 
 	public function init() {
