@@ -16,6 +16,7 @@ use Ubiquity\annotations\acl\PermissionAnnotation;
 use Ubiquity\security\acl\cache\PermissionsMap;
 use Ubiquity\security\acl\models\AbstractAclPart;
 use Ubiquity\security\acl\models\AclElement;
+use Ubiquity\security\acl\persistence\AclCacheProvider;
 
 /**
  * Ubiquity\security\acl$AclManager
@@ -38,6 +39,8 @@ class AclManager {
 	 * @var PermissionsMap
 	 */
 	protected static $permissionMap;
+
+	protected static $providersPersistence;
 
 	/**
 	 * Create AclList with default roles and resources.
@@ -67,14 +70,16 @@ class AclManager {
 	 * @param array|string $selectedProviders
 	 */
 	public static function reloadFromSelectedProviders($selectedProviders = '*') {
+		$sProviders = self::$aclList->getProviders();
 		self::$aclList->clear();
 		$providers = [];
-		foreach (self::$aclList->getProviders() as $prov) {
+		foreach ($sProviders as $prov) {
 			if ($selectedProviders === '*' || \array_search(\get_class($prov), $selectedProviders) !== false) {
 				$providers[] = $prov;
 			}
 		}
 		self::initFromProviders($providers);
+		self::$aclList->setProviders($sProviders);
 	}
 
 	public static function addRole(string $name, ?array $parents = []) {
@@ -219,11 +224,9 @@ class AclManager {
 	 */
 	public static function initCache(&$config) {
 		CacheManager::start($config);
-		CacheManager::registerAnnotations([
-			'allow' => AllowAnnotation::class,
-			'resource' => ResourceAnnotation::class,
-			'permission' => PermissionAnnotation::class
-		]);
+		self::filterProviders(AclCacheProvider::class);
+		self::reloadFromSelectedProviders([]);
+		self::registerAnnotations($config);
 		$files = \Ubiquity\cache\CacheManager::getControllersFiles($config, true);
 		$parser = new AclControllerParser();
 		$parser->init();
@@ -240,6 +243,16 @@ class AclManager {
 			}
 		}
 		$parser->save();
+		self::removefilterProviders();
+		self::reloadFromSelectedProviders();
+	}
+
+	public static function registerAnnotations(&$config) {
+		CacheManager::registerAnnotations([
+			'allow' => AllowAnnotation::class,
+			'resource' => ResourceAnnotation::class,
+			'permission' => PermissionAnnotation::class
+		]);
 	}
 
 	/**
@@ -305,6 +318,22 @@ class AclManager {
 			}
 		}
 		return $result;
+	}
+
+	protected static function filterProviders(string $providerClass) {
+		$providers = self::$aclList->getProviders();
+		$filter = [];
+		foreach ($providers as $prov) {
+			if ($prov instanceof $providerClass) {
+				$filter[] = $prov;
+			}
+		}
+		self::$aclList->setProviders($filter);
+		self::$providersPersistence = $providers;
+	}
+
+	protected static function removefilterProviders() {
+		self::$aclList->setProviders(self::$providersPersistence);
 	}
 }
 

@@ -174,5 +174,7 @@ class AclDAOProvider implements AclProviderInterface {
 		}
 		return $result;
 	}
+
+	public function clearAll(): void {}
 }
 

@@ -3,6 +3,7 @@ namespace Ubiquity\security\acl\cache;
 
 use Ubiquity\cache\CacheManager;
 use Ubiquity\security\acl\cache\traits\AclCacheTrait;
+use Ubiquity\security\acl\AclManager;
 
 /**
  * Ubiquity\security\acl\cache$PermissionsMap
@@ -24,6 +25,7 @@ class PermissionsMap {
 	private const CACHE_KEY = 'permissionsMap';
 
 	public function __construct() {
+		$this->arrayMap = [];
 		$this->createCache($this->getRootKey(self::CACHE_KEY));
 	}
 
@@ -66,6 +68,17 @@ class PermissionsMap {
 			$result[] = [
 				'controller.action' => $k
 			] + $v;
+		}
+		return $result;
+	}
+
+	public function getObjectMap() {
+		$result = [];
+		foreach ($this->arrayMap as $k => $v) {
+			$resource = $v['resource'] ?? '*';
+			$permission = $v['permission'] ?? 'ALL';
+			$roles = AclManager::getAclList()->getRolesWithPermissionOnResource($resource, $permission);
+			$result[] = new PermissionMapObject($k, $resource, $permission, $roles);
 		}
 		return $result;
 	}

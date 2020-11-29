@@ -59,6 +59,8 @@ interface AclProviderInterface {
 
 	public function saveAll(): void;
 
+	public function clearAll(): void;
+
 	public function getDetails(): array;
 
 	public function getModelClassesSwap(): array;

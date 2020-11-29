@@ -123,5 +123,15 @@ abstract class AclArrayProvider implements AclProviderInterface {
 	public function getModelClassesSwap(): array {
 		return [];
 	}
+
+	/**
+	 *
+	 * {@inheritdoc}
+	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::clearAll()
+	 */
+	public function clearAll(): void {
+		$this->parts = [];
+		$this->aclsArray = [];
+	}
 }
 

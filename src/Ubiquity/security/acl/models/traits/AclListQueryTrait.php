@@ -49,6 +49,16 @@ trait AclListQueryTrait {
 		return $result;
 	}
 
+	public function getRolesWithPermissionOnResource(string $resource, string $permission) {
+		$result = [];
+		foreach ($this->acls as $acl) {
+			if ($acl->getPermission()->getName() === $permission && $acl->getResource()->getName() === $resource) {
+				$result[] = $acl->getRole()->getName();
+			}
+		}
+		return $result;
+	}
+
 	/**
 	 *
 	 * @param AbstractAclPart $part

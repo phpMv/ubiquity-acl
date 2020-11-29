@@ -5,6 +5,7 @@ use Ubiquity\security\acl\persistence\AclProviderInterface;
 use Ubiquity\exceptions\AclException;
 use Ubiquity\security\acl\models\traits\AclListOperationsTrait;
 use Ubiquity\security\acl\models\traits\AclListQueryTrait;
+use Ubiquity\security\acl\persistence\AclCacheProvider;
 
 /**
  * Ubiquity\security\acl\models$AclList
@@ -84,6 +85,9 @@ class AclList {
 		];
 		$this->elementsCache = [];
 		$this->acls = [];
+		foreach ($this->providers as $prov) {
+			$prov->clearAll();
+		}
 	}
 
 	public function getRoleByName(string $name) {
@@ -245,6 +249,15 @@ class AclList {
 			$result[] = \get_class($prov);
 		}
 		return $result;
+	}
+
+	public function hasCache() {
+		foreach ($this->providers as $prov) {
+			if ($prov instanceof AclCacheProvider) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
