@@ -62,7 +62,12 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::saveAcl()
 	 */
 	public function saveAcl(AclElement $aclElement) {
-		return DAO::save($aclElement);
+		$object = $this->castElement($aclElement);
+		$res = DAO::save($object);
+		if ($res) {
+			$aclElement->setId($object->getId());
+		}
+		return $res;
 	}
 
 	/**
@@ -81,6 +86,11 @@ class AclDAOProvider implements AclProviderInterface {
 			$result[$elm->getName()] = $elm;
 		}
 		return $result;
+	}
+
+	protected function castElement($part) {
+		$class = $this->getModelClasses()[get_class($part)] ?? get_class($part);
+		return $part->castAs($class);
 	}
 
 	/**
@@ -116,7 +126,12 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::savePart()
 	 */
 	public function savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
-		return DAO::insert($part);
+		$object = $this->castElement($part);
+		$res = DAO::insert($object);
+		if ($res) {
+			$part->setId($object->getId());
+		}
+		return $res;
 	}
 
 	/**
@@ -125,7 +140,7 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::updatePart()
 	 */
 	public function updatePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
-		return DAO::update($part);
+		return DAO::update($this->castElement($part));
 	}
 
 	/**
@@ -134,7 +149,7 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::removePart()
 	 */
 	public function removePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
-		return DAO::remove($part);
+		return DAO::remove($this->castElement($part));
 	}
 
 	public function isAutosave(): bool {
@@ -144,11 +159,17 @@ class AclDAOProvider implements AclProviderInterface {
 	public function saveAll(): void {}
 
 	public function existPart(AbstractAclPart $part): bool {
-		return DAO::exists(\get_class($part));
+		$elm = $this->castElement($part);
+		return DAO::exists(\get_class($elm), 'id= ?', [
+			$elm->getId()
+		]);
 	}
 
 	public function existAcl(AclElement $aclElement): bool {
-		return DAO::exists(\get_class($aclElement));
+		$elm = $this->castElement($aclElement);
+		return DAO::exists(\get_class($aclElement), 'id= ?', [
+			$elm->getId()
+		]);
 	}
 
 	public function getDetails(): array {
@@ -161,18 +182,22 @@ class AclDAOProvider implements AclProviderInterface {
 	}
 
 	public function getModelClassesSwap(): array {
-		$swap = [
-			AclElement::class => $this->aclClass,
-			Role::class => $this->roleClass,
-			Resource::class => $this->resourceClass,
-			Permission::class => $this->permissionClass
-		];
+		$swap = $this->getModelClasses();
 		$classes = \array_values($swap);
 		$result = [];
 		foreach ($classes as $class) {
 			$result[$class] = $swap;
 		}
 		return $result;
+	}
+
+	public function getModelClasses(): array {
+		return [
+			AclElement::class => $this->aclClass,
+			Role::class => $this->roleClass,
+			Resource::class => $this->resourceClass,
+			Permission::class => $this->permissionClass
+		];
 	}
 
 	public function clearAll(): void {}

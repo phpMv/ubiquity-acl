@@ -259,5 +259,13 @@ class AclList {
 		}
 		return false;
 	}
+
+	public function getElementsNames($part) {
+		$result = [];
+		foreach ($this->$part as $elm) {
+			$result[] = $elm->__toString();
+		}
+		return $result;
+	}
 }
 

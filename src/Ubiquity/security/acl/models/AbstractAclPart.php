@@ -78,5 +78,9 @@ abstract class AbstractAclPart {
 	public function __toString() {
 		return $this->name;
 	}
+
+	public function castAs(string $class) {
+		return unserialize(sprintf('O:%d:"%s"%s', \strlen($class), $class, \strstr(\strstr(\serialize($this), '"'), ':')));
+	}
 }
 
