@@ -26,7 +26,8 @@ abstract class AclArrayProvider implements AclProviderInterface {
 
 	protected function loadAllPart($class): array {
 		$elements = [];
-		foreach ($this->parts[$class] as $partArray) {
+		$part = $this->parts[$class] ?? [];
+		foreach ($part as $partArray) {
 			$elm = new $class();
 			$elm->fromArray($partArray);
 			$elements[$partArray['name']] = $elm;

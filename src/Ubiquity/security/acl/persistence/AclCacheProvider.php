@@ -58,7 +58,7 @@ class AclCacheProvider extends AclArrayProvider {
 			Permission::class
 		];
 		foreach ($classes as $class) {
-			CacheManager::$cache->store($this->getRootKey($class), $this->parts[$class]);
+			CacheManager::$cache->store($this->getRootKey($class), $this->parts[$class] ?? []);
 		}
 	}
 
