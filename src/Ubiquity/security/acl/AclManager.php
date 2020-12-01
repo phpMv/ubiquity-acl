@@ -40,10 +40,6 @@ class AclManager {
 	 */
 	protected static $permissionMap;
 
-	/**
-	 *
-	 * @var AclProviderInterface[]
-	 */
 	protected static $providersPersistence;
 
 	/**
@@ -52,6 +48,15 @@ class AclManager {
 	public static function start(): void {
 		self::$aclList = new AclList();
 		self::$aclList->init();
+	}
+
+	/**
+	 * Check whether the Acl service is started.
+	 *
+	 * @return bool
+	 */
+	public static function isStarted(): bool {
+		return self::$aclList !== NULL && (self::$aclList instanceof AclList);
 	}
 
 	/**
@@ -251,10 +256,6 @@ class AclManager {
 		self::reloadFromSelectedProviders();
 	}
 
-	/**
-	 *
-	 * @param array $config
-	 */
 	public static function registerAnnotations(&$config) {
 		CacheManager::registerAnnotations([
 			'allow' => AllowAnnotation::class,
@@ -317,10 +318,6 @@ class AclManager {
 		return self::$aclList->getProvider($providerClass);
 	}
 
-	/**
-	 *
-	 * @return array
-	 */
 	public static function getModelClassesSwap(): array {
 		$result = [];
 		$aclList = self::getAclList();
@@ -332,12 +329,7 @@ class AclManager {
 		return $result;
 	}
 
-	/**
-	 * Temporarily filters providers.
-	 *
-	 * @param string $providerClass
-	 */
-	public static function filterProviders(string $providerClass): void {
+	public static function filterProviders(string $providerClass) {
 		$providers = self::$aclList->getProviders();
 		$filter = [];
 		foreach ($providers as $prov) {
@@ -349,10 +341,7 @@ class AclManager {
 		self::$providersPersistence = $providers;
 	}
 
-	/**
-	 * Remove the providers filtering set with filterProviders call.
-	 */
-	public static function removefilterProviders(): void {
+	public static function removefilterProviders() {
 		self::$aclList->setProviders(self::$providersPersistence);
 	}
 }
