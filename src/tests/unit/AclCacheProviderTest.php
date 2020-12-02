@@ -199,8 +199,5 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			$_GET["c"] = 'TestController/added';
 			Startup::run($config);
 		}, '@ALL is not allowed!');
-
-		$this->removeAcls();
-		AclManager::saveAll();
 	}
 }
