@@ -30,22 +30,21 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 	 * Tests AclCacheProvider->loadAllAcls()
 	 */
 	public function testLoadAllAcls() {
-		$this->assertEquals(1, \count(AclManager::getAcls()));
-		$this->assertEquals(3, count(AclManager::getRoles()));
-		$this->assertEquals(3, count(AclManager::getPermissions()));
-		$this->assertEquals(3, count(AclManager::getResources()));
-		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'READ'));
-		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
-		AclManager::allow('USER', 'Home', 'WRITE');
-		$this->assertEquals(2, \count(AclManager::getAcls()));
-		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'WRITE'));
+		$this->assertEquals(3, \count(AclManager::getAcls()));
+		$this->assertEquals(2, count(AclManager::getRoles()));
+		$this->assertEquals(5, count(AclManager::getPermissions()));
+		$this->assertEquals(6, count(AclManager::getResources()));
+		$this->assertTrue(AclManager::isAllowed('@ALL', 'Home', 'ALLOW'));
+		$this->assertFalse(AclManager::isAllowed('@ALL', 'Home', 'ADMIN'));
+		AclManager::allow('@ALL', 'Home', 'ADMIN');
+		$this->assertEquals(4, \count(AclManager::getAcls()));
+		$this->assertTrue(AclManager::isAllowed('@ALL', 'Home', 'ADMIN'));
 
-		AclManager::removeAcl('USER', 'Home', 'WRITE');
-		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'WRITE'));
+		AclManager::removeAcl('@ALL', 'Home', 'ADMIN');
+		$this->assertFalse(AclManager::isAllowed('@ALL', 'Home', 'ADMIN'));
 	}
 
 	public function testExist() {
-		$this->initTestController();
 		$this->assertInstanceOf(AclCacheProvider::class, AclManager::getProvider(AclCacheProvider::class));
 		$this->assertTrue(AclManager::existPartIn(AclManager::getAclList()->getRoleByName('@OTHER'), AclCacheProvider::class));
 		$this->assertTrue(AclManager::existAclIn(current(AclManager::getAcls()), AclCacheProvider::class));
@@ -55,14 +54,17 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 	 * Tests AclCacheProvider->savePart()
 	 */
 	public function testSavePart() {
-		AclManager::addRole('TESTER', [
-			'USER'
+		AclManager::addRole('@TESTER', [
+			'@OTHER'
 		]);
-		$this->assertTrue(AclManager::isAllowed('TESTER', 'Home', 'READ'));
+		$this->assertFalse(AclManager::isAllowed('@OTHER', 'Home', 'ADMIN'));
+		$this->assertFalse(AclManager::isAllowed('@TESTER', 'Home', 'ADMIN'));
+		AclManager::allow('@OTHER', 'Home', 'ADMIN');
+		$this->assertTrue(AclManager::isAllowed('@TESTER', 'Home', 'ADMIN'));
 
-		AclManager::removeRole('TESTER');
+		AclManager::removeRole('@TESTER');
 		$this->expectException(AclException::class);
-		AclManager::isAllowed('TESTER', 'Home', 'READ');
+		AclManager::isAllowed('@TESTER', 'Home', 'ADMIN');
 	}
 
 	/**
@@ -85,15 +87,15 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::initFromProviders([
 			new AclCacheProvider()
 		]);
-		$this->assertEquals(4, count(AclManager::getPermissions()));
-		$this->assertFalse(AclManager::isAllowed('USER', 'Home', 'DELETE'));
+		$this->assertEquals(6, count(AclManager::getPermissions()));
+		$this->assertFalse(AclManager::isAllowed('@OTHER', 'Other', 'DELETE'));
 		AclManager::setPermissionLevel('DELETE', 0);
-		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'DELETE'));
+		$this->assertTrue(AclManager::isAllowed('@OTHER', 'Other', 'DELETE'));
 
 		AclManager::removePermission('DELETE');
 		AclManager::saveAll();
 		$this->expectException(AclException::class);
-		AclManager::isAllowed('USER', 'Home', 'DELETE');
+		AclManager::isAllowed('@OTHER', 'Other', 'DELETE');
 	}
 
 	protected function initTestController() {
@@ -127,42 +129,21 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals($result, $res);
 	}
 
-	protected function removeAcls() {
-		AclManager::removeResource('IndexResource');
-		AclManager::removeResource('Other');
-		AclManager::removeResource('TestController.allowOther2');
-		AclManager::removeAcl('@ALL', 'Home', 'ALLOW');
-		AclManager::removeAcl('@OTHER', 'Other', 'ALLOW_OTHER');
-		AclManager::removeAcl('@OTHER', 'TestController.allowOther2', 'ALL');
-		AclManager::removePermission('ALLOW');
-		AclManager::removePermission('ALLOW_OTHER');
-		AclManager::removePermission('NEW_PERMISSION');
-		AclManager::removePermission('ADMIN');
-		AclManager::removeRole('@OTHER');
-	}
-
 	/**
 	 * Tests AclManager::initCache()
 	 */
 	public function testInitCache() {
 		$this->initTestController();
-		$this->assertEquals(4, count(AclManager::getRoles()));
-		$this->assertEquals(4, \count(AclManager::getAcls()));
-		$this->assertEquals(6, count(AclManager::getResources()));
-		$this->assertEquals(7, count(AclManager::getPermissions()));
+		$this->assertEquals(2, count(AclManager::getRoles()));
+		$this->assertEquals(3, \count(AclManager::getAcls()));
+		$this->assertEquals(5, count(AclManager::getResources()));
+		$this->assertEquals(6, count(AclManager::getPermissions()));
 
 		$this->assertTrue(AclManager::isAllowed('@ALL', 'Home', 'ALLOW'));
 		$this->assertTrue(AclManager::isAllowed('@OTHER', 'Other', 'ALLOW_OTHER'));
 
 		$this->assertFalse(AclManager::isAllowed('@ALL', 'Home', 'ADMIN'));
 		$this->assertFalse(AclManager::isAllowed('@OTHER', 'Home', 'ADMIN'));
-
-		$this->removeAcls();
-		$this->assertEquals(3, count(AclManager::getRoles()));
-		$this->assertEquals(3, count(AclManager::getResources()));
-		$this->assertEquals(1, \count(AclManager::getAcls()));
-		$this->assertEquals(3, count(AclManager::getPermissions()));
-		AclManager::saveAll();
 	}
 
 	/**
@@ -174,7 +155,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$config = [
 			"cache" => [
-				"directory" => "cache-tmp/",
+				"directory" => "cache/",
 				"system" => "Ubiquity\\cache\\system\\ArrayCache",
 				"params" => []
 			],

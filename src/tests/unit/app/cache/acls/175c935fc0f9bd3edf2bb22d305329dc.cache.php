@@ -1,20 +1,2 @@
 <?php
-return array(
-	"4158556000." => array(
-		"resource" => array(
-			"value" => false,
-			"id" => false,
-			"name" => "Home"
-		),
-		"role" => array(
-			"parents" => "",
-			"id" => false,
-			"name" => "USER"
-		),
-		"permission" => array(
-			"level" => 1,
-			"id" => false,
-			"name" => "READ"
-		)
-	)
-);
+return array("3490551089."=>array("resource"=>array("value"=>false,"id"=>false,"name"=>"Home"),"role"=>array("parents"=>"","id"=>false,"name"=>"@ALL"),"permission"=>array("level"=>0,"id"=>false,"name"=>"ALLOW")),"636983557."=>array("resource"=>array("value"=>false,"id"=>false,"name"=>"Other"),"role"=>array("parents"=>"","id"=>false,"name"=>"@OTHER"),"permission"=>array("level"=>0,"id"=>false,"name"=>"ALLOW_OTHER")),"1468998154."=>array("resource"=>array("value"=>false,"id"=>false,"name"=>"TestController.allowOther2"),"role"=>array("parents"=>"","id"=>false,"name"=>"@OTHER"),"permission"=>array("level"=>1000,"id"=>false,"name"=>"ALL")));

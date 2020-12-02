@@ -1,2 +1,0 @@
-<?php
-return array("controllers\\TestController.allowExisting"=>array("resource"=>"Home","permission"=>"ALLOW"),"controllers\\TestController.allowOther"=>array("resource"=>"Other","permission"=>"ALLOW_OTHER"),"controllers\\TestController.newPermission"=>array("resource"=>"Home","permission"=>"NEW_PERMISSION"),"controllers\\TestController.existingPerm"=>array("resource"=>"Home","permission"=>"READ"),"controllers\\TestController.otherPermission"=>array("resource"=>"Home","permission"=>"ADMIN"),"TestController.*"=>array("resource"=>"Home","permission"=>"ALL"));
