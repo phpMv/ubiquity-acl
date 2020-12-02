@@ -99,7 +99,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 	protected function initTestController() {
 		$config = [
 			"cache" => [
-				"directory" => "cache/",
+				"directory" => "cache-tmp/",
 				"system" => "Ubiquity\\cache\\system\\ArrayCache",
 				"params" => []
 			],
@@ -174,7 +174,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$config = [
 			"cache" => [
-				"directory" => "cache/",
+				"directory" => "cache-tmp/",
 				"system" => "Ubiquity\\cache\\system\\ArrayCache",
 				"params" => []
 			],
