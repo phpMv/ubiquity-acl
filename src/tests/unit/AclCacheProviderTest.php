@@ -32,8 +32,8 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 	public function testLoadAllAcls() {
 		$this->assertEquals(3, \count(AclManager::getAcls()));
 		$this->assertEquals(2, count(AclManager::getRoles()));
-		$this->assertEquals(5, count(AclManager::getPermissions()));
-		$this->assertEquals(6, count(AclManager::getResources()));
+		$this->assertEquals(6, count(AclManager::getPermissions()));
+		$this->assertEquals(5, count(AclManager::getResources()));
 		$this->assertTrue(AclManager::isAllowed('@ALL', 'Home', 'ALLOW'));
 		$this->assertFalse(AclManager::isAllowed('@ALL', 'Home', 'ADMIN'));
 		AclManager::allow('@ALL', 'Home', 'ADMIN');
@@ -65,6 +65,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::removeRole('@TESTER');
 		$this->expectException(AclException::class);
 		AclManager::isAllowed('@TESTER', 'Home', 'ADMIN');
+		AclManager::saveAll();
 	}
 
 	/**
@@ -87,7 +88,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::initFromProviders([
 			new AclCacheProvider()
 		]);
-		$this->assertEquals(6, count(AclManager::getPermissions()));
+		$this->assertEquals(7, count(AclManager::getPermissions()));
 		$this->assertFalse(AclManager::isAllowed('@OTHER', 'Other', 'DELETE'));
 		AclManager::setPermissionLevel('DELETE', 0);
 		$this->assertTrue(AclManager::isAllowed('@OTHER', 'Other', 'DELETE'));
