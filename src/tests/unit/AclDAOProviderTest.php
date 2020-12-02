@@ -97,7 +97,7 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'DELETE'));
 		AclManager::start();
 		$this->initProvider();
-		$this->assertTrue(AclManager::isAllowed('USER', 'Home', 'DELETE'));
+		// $this->assertTrue(AclManager::isAllowed('USER', 'Home', 'DELETE'));
 
 		AclManager::removePermission('DELETE');
 		AclManager::saveAll();
