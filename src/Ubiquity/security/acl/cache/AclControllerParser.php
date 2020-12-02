@@ -112,12 +112,17 @@ class AclControllerParser {
 			try {
 				$annotsResource = Reflexion::getAnnotationClass($controllerClass, '@resource');
 				$annotsPermission = Reflexion::getAnnotationClass($controllerClass, '@permission');
+				$annotAllows = Reflexion::getAnnotationClass($controllerClass, '@allow');
 			} catch (\Exception $e) {
 				// When controllerClass generates an exception
 			}
 			$this->mainResource = $annotsResource[0] ?? null;
 			$this->mainPermission = $annotsPermission[0] ?? null;
-
+			if (\is_array($annotAllows) && \count($annotAllows) > 0) {
+				$resource = $this->mainResource ? $this->mainResource->name : $reflect->getShortName();
+				$permission = $this->mainPermission ? $this->mainPermission->name : 'ALL';
+				$this->addAllows($annotAllows, $controllerClass, null, $resource, $permission);
+			}
 			$methods = Reflexion::getMethods($controllerClass, \ReflectionMethod::IS_PUBLIC);
 			$this->parseMethods($methods);
 		}
