@@ -101,7 +101,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 	protected function initTestController() {
 		$config = [
 			"cache" => [
-				"directory" => "cache-tmp/",
+				"directory" => "cache/",
 				"system" => "Ubiquity\\cache\\system\\ArrayCache",
 				"params" => []
 			],
