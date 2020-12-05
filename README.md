@@ -7,6 +7,7 @@
 Access control lists for Ubiquity framework
 
 ## Samples
+
 ### Defining ACLs at runtime
 #### One by one
 ```php
@@ -20,4 +21,30 @@ AclManager::allow('@USER','Home','READ');
 ```php
 AclManager::start();
 AclManager::addAndAllow('@USER','Home','READ');
+```
+### Defining ACLs with annotations
+#### Starting
+```php
+use Ubiquity\security\acl\AclManager;
+use Ubiquity\security\acl\persistence\AclCacheProvider;
+
+AclManager::start();
+AclManager::initFromProviders([
+	new AclCacheProvider()
+]);
+```
+
+#### Defining ACLs in controllers
+
+##### A controller as a resource, authorized for a role
+```php
+/**
+ * Controller TestAclController
+ *
+ * @resource('Main')
+ * @allow('role'=>'@USER')
+ */
+class TestAclController extends ControllerBase {
+	use AclControllerTrait;
+}
 ```
