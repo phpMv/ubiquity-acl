@@ -69,7 +69,6 @@ class AclElement {
 		$this->role = $role;
 		$this->permission = $permission;
 		$this->resource = $resource;
-		$this->_fromArray = true;
 	}
 
 	public function toArray(): array {

@@ -52,7 +52,6 @@ abstract class AbstractAclPart {
 		foreach ($values as $k => $v) {
 			$this->$k = $v;
 		}
-		$this->_fromArray = true;
 	}
 
 	/**
