@@ -1,4 +1,5 @@
 <?php
+
 namespace Ubiquity\security\acl\controllers;
 
 use Ubiquity\security\acl\AclManager;
@@ -10,10 +11,9 @@ use Ubiquity\security\acl\AclManager;
  *
  * @author jc
  * @version 1.0.0
- *
+ *         
  */
 trait AclControllerTrait {
-
 	public abstract function _getRole();
 
 	/**
@@ -24,10 +24,15 @@ trait AclControllerTrait {
 	 * @return boolean
 	 */
 	public function isValid($action) {
-		$controller = \get_class($this);
-		$resourceController = AclManager::getPermissionMap()->getRessourcePermission($controller, $action);
-		if (isset($resourceController)) {
-			return AclManager::isAllowed($this->_getRole(), $resourceController['resource'], $resourceController['permission']);
+		$controller = \get_class ( $this );
+		$resourceController = AclManager::getPermissionMap ()->getRessourcePermission ( $controller, $action );
+		if (isset ( $resourceController )) {
+			if (AclManager::isAllowed ( $this->_getRole (), $resourceController ['resource'], $resourceController ['permission'] )) {
+				return true;
+			}
+		}
+		if ($action !== '*') {
+			return $this->isValid ( '*' );
 		}
 		return false;
 	}
