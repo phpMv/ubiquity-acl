@@ -10,9 +10,6 @@ use Ubiquity\cache\ClassUtils;
 use Ubiquity\security\acl\cache\AclControllerParser;
 use Ubiquity\exceptions\AclException;
 use Ubiquity\cache\CacheManager;
-use Ubiquity\annotations\acl\AllowAnnotation;
-use Ubiquity\annotations\acl\ResourceAnnotation;
-use Ubiquity\annotations\acl\PermissionAnnotation;
 use Ubiquity\security\acl\cache\PermissionsMap;
 use Ubiquity\security\acl\models\AbstractAclPart;
 use Ubiquity\security\acl\models\AclElement;
@@ -257,11 +254,7 @@ class AclManager {
 	}
 
 	public static function registerAnnotations(&$config) {
-		CacheManager::registerAnnotations([
-			'allow' => AllowAnnotation::class,
-			'resource' => ResourceAnnotation::class,
-			'permission' => PermissionAnnotation::class
-		]);
+		CacheManager::getAnnotationsEngineInstance()->registerAcls();
 	}
 
 	/**
