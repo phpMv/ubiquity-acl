@@ -110,7 +110,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 				"controllers" => "controllers"
 			]
 		];
-
+		CacheManager::start($config);
 		AclManager::initCache($config);
 
 		AclManager::start();

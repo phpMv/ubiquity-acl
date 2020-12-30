@@ -228,7 +228,6 @@ class AclManager {
 	 * @throws \Ubiquity\exceptions\AclException
 	 */
 	public static function initCache(&$config) {
-		CacheManager::start($config);
 		self::filterProviders(AclCacheProvider::class);
 		self::reloadFromSelectedProviders([]);
 		self::registerAnnotations($config);
