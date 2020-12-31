@@ -3,7 +3,7 @@ build:
     analysis:
       dependencies:
         before:
-          - composer require phpmv/ubiquity:dev-master codeception/codeception:^4.1 phpmv/ubiquity-annotations:^0.0 --dev
+          - composer require codeception/codeception:^4.1 phpmv/ubiquity-annotations:^0.0 --dev
       environment:
         php:
           version: 7.4

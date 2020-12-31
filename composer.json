@@ -34,7 +34,7 @@
         }
     },
     "require-dev": {
-	    "phpmv/ubiquity": ">=2.3",
+	    "phpmv/ubiquity": "dev-master",
         "codeception/codeception": "^4.1",
         "codeception/module-asserts": "^1.0.0",
         "phpmv/ubiquity-dev": "^0.1"
