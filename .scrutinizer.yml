@@ -18,6 +18,7 @@ build:
           mysql: 5.7
       tests:
         before:
+          - composer require phpmv/ubiquity:dev-master phpmv/ubiquity-annotations:^0.0 --dev
           - mysql -u root mysql < src/tests/unit/db/acls.sql
         override:
           - command: (cd src/ && ./../vendor/bin/codecept build && ./../vendor/bin/codecept run --coverage-xml -v)
