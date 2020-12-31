@@ -117,6 +117,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		AclManager::initFromProviders([
 			new AclCacheProvider()
 		]);
+		AclManager::addRole('nobody');
 	}
 
 	protected function _display($callback) {
