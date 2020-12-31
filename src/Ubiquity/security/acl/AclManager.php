@@ -79,7 +79,7 @@ class AclManager {
 		self::$aclList->clear();
 		$providers = [];
 		foreach ($sProviders as $prov) {
-			if ($selectedProviders === '*' || \array_search(\get_class($prov), $selectedProviders) !== false) {
+			if ($selectedProviders === '*' || (\is_array($selectedProviders) && \array_search(\get_class($prov), $selectedProviders) !== false)) {
 				$providers[] = $prov;
 			}
 		}
@@ -230,7 +230,7 @@ class AclManager {
 	public static function initCache(&$config) {
 		self::filterProviders(AclCacheProvider::class);
 		self::reloadFromSelectedProviders([]);
-		self::registerAnnotations($config);
+		self::registerAnnotations();
 		$files = \Ubiquity\cache\CacheManager::getControllersFiles($config, true);
 		$parser = new AclControllerParser();
 		$parser->init();
@@ -251,7 +251,7 @@ class AclManager {
 		self::reloadFromSelectedProviders();
 	}
 
-	public static function registerAnnotations(&$config) {
+	protected static function registerAnnotations() {
 		CacheManager::getAnnotationsEngineInstance()->registerAcls();
 	}
 
