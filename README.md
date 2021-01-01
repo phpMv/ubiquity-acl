@@ -39,9 +39,8 @@ AclManager::initFromProviders([
 ##### A controller as a resource, authorized for a role
 With annotations:
 ```php
+namespace controllers;
 /**
- * Controller TestAclController
- *
  * @resource('Main')
  * @allow('role'=>'@USER')
  */
@@ -53,8 +52,8 @@ class TestAclController extends ControllerBase {
 With attributes:
 ```php
 namespace controllers;
-use Ubiquity\attributes\items\acls\Resource;
-use Ubiquity\attributes\items\acls\Allow;
+use Ubiquity\attributes\items\acl\Resource;
+use Ubiquity\attributes\items\acl\Allow;
 
 #[Resource('Main')]
 #[Allow(role: '@USER')]
