@@ -22,7 +22,7 @@ AclManager::allow('@USER','Home','READ');
 AclManager::start();
 AclManager::addAndAllow('@USER','Home','READ');
 ```
-### Defining ACLs with annotations
+### Defining ACLs with annotations or attributes
 #### Starting
 ```php
 use Ubiquity\security\acl\AclManager;
@@ -37,6 +37,7 @@ AclManager::initFromProviders([
 #### Defining ACLs in controllers
 
 ##### A controller as a resource, authorized for a role
+With annotations:
 ```php
 /**
  * Controller TestAclController
@@ -44,6 +45,19 @@ AclManager::initFromProviders([
  * @resource('Main')
  * @allow('role'=>'@USER')
  */
+class TestAclController extends ControllerBase {
+	use AclControllerTrait;
+}
+```
+
+With attributes:
+```php
+namespace controllers;
+use Ubiquity\attributes\items\acls\Resource;
+use Ubiquity\attributes\items\acls\Allow;
+
+#[Resource('Main')]
+#[Allow(role: '@USER')]
 class TestAclController extends ControllerBase {
 	use AclControllerTrait;
 }
