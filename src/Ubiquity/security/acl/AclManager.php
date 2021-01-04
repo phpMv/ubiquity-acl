@@ -45,6 +45,14 @@ class AclManager {
 		self::$aclList = new AclList();
 		self::$aclList->init();
 	}
+	
+	/**
+	 * Start the Acls with AclCacheProvider (for attributes or annotations).
+	 */
+	public static function startWithCacheProvider(): void {
+		self::start();
+		self::initFromProviders([new AclCacheProvider()]);
+	}
 
 	/**
 	 * Check whether the Acl service is started.

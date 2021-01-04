@@ -20,10 +20,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 			]
 		];
 		CacheManager::startProd($config);
-		AclManager::start();
-		AclManager::initFromProviders([
-			new AclCacheProvider()
-		]);
+		AclManager::startWithCacheProvider();
 	}
 
 	/**
