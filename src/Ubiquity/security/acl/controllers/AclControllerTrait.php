@@ -3,6 +3,8 @@
 namespace Ubiquity\security\acl\controllers;
 
 use Ubiquity\security\acl\AclManager;
+use Ubiquity\exceptions\AclException;
+use Ubiquity\log\Logger;
 
 /**
  * To use with a controller with acls.
@@ -17,6 +19,31 @@ trait AclControllerTrait {
 	public abstract function _getRole();
 
 	/**
+	 * Returns True if access to the controller is allowed for $role.
+	 *
+	 * @param string $action
+	 * @param string $role
+	 * @return boolean
+	 */
+	protected function isValidRole($action,$role) {
+		$controller = \get_class ( $this );
+		$resourceController = AclManager::getPermissionMap ()->getRessourcePermission ( $controller, $action );
+		if (isset ( $resourceController )) {
+			try{
+				if (AclManager::isAllowed ( $role, $resourceController ['resource'], $resourceController ['permission'] )) {
+					return true;
+				}
+			}
+			catch(AclException $e){
+				Logger::alert('Router', $role.' is not allowed for this resource','Acls',[$controller,$action]);
+			}
+		}
+		if ($action !== '*') {
+			return $this->isValidRole( '*',$role );
+		}
+		return false;
+	}
+	/**
 	 * Returns True if access to the controller is allowed for the role returned by _getRole method.
 	 * To be override in sub classes
 	 *
@@ -24,17 +51,7 @@ trait AclControllerTrait {
 	 * @return boolean
 	 */
 	public function isValid($action) {
-		$controller = \get_class ( $this );
-		$resourceController = AclManager::getPermissionMap ()->getRessourcePermission ( $controller, $action );
-		if (isset ( $resourceController )) {
-			if (AclManager::isAllowed ( $this->_getRole (), $resourceController ['resource'], $resourceController ['permission'] )) {
-				return true;
-			}
-		}
-		if ($action !== '*') {
-			return $this->isValid ( '*' );
-		}
-		return false;
+		return $this->isValidRole($action, $this->_getRole());
 	}
 }
 
