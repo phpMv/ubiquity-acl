@@ -10,7 +10,7 @@ use Ubiquity\security\acl\AclManager;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 class PermissionsMap {
@@ -32,6 +32,10 @@ class PermissionsMap {
 	protected function getKey($controller, $action) {
 		return "$controller.$action";
 	}
+	
+	private function _getRessourcePermission(string $controller, string $action) {
+		return $this->arrayMap[$this->getKey($controller, $action)] ?? null;
+	}
 
 	public function addAction(string $controller, string $action, ?string $resource = '*', ?string $permission = 'ALL') {
 		$this->arrayMap[$this->getKey($controller, $action)] = [
@@ -47,7 +51,17 @@ class PermissionsMap {
 	 * @return array|NULL
 	 */
 	public function getRessourcePermission(string $controller, string $action) {
-		return $this->arrayMap[$this->getKey($controller, $action)] ?? null;
+		if( ($r=$this->_getRessourcePermission($controller, $action))!==null){
+			return $r;
+		}
+		if ($action !== '*') {
+			$r=new \ReflectionMethod($controller,$action);
+			$class=$r->getDeclaringClass()->getName();
+			if($class!==$controller){
+				return $this->_getRessourcePermission($class, $action);
+			}
+		}
+		return $this->_getRessourcePermission('*', $action);
 	}
 
 	public function save() {

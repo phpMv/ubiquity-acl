@@ -12,13 +12,21 @@ use Ubiquity\log\Logger;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 trait AclControllerTrait {
 	public abstract function _getRole();
 	
-	protected function isRoleAllowedForControllerAction(string $controller,string $action,string $role):bool{
+	/**
+	 * Returns True if access to the controller is allowed for $role.
+	 *
+	 * @param string $action
+	 * @param string $role
+	 * @return boolean
+	 */
+	protected function isValidRole($action,$role) {
+		$controller=\get_class($this);
 		$resourceController = AclManager::getPermissionMap ()->getRessourcePermission ( $controller, $action );
 		if (isset ( $resourceController )) {
 			try{
@@ -29,28 +37,6 @@ trait AclControllerTrait {
 			catch(AclException $e){
 				Logger::alert('Router', $role.' is not allowed for this resource','Acls',[$controller,$action]);
 			}
-		}
-		return false;
-	}
-	/**
-	 * Returns True if access to the controller is allowed for $role.
-	 *
-	 * @param string $action
-	 * @param string $role
-	 * @return boolean
-	 */
-	protected function isValidRole($action,$role) {
-		$controller=\get_class($this);
-		if($this->isRoleAllowedForControllerAction($controller, $action, $role)){
-			return true;
-		}
-		if ($action !== '*') {
-			$r=new \ReflectionMethod($this,$action);
-			$class=$r->getDeclaringClass()->getName();
-			if($class!==$controller && $this->isRoleAllowedForControllerAction($class, $action, $role)){
-				return true;
-			}
-			return $this->isRoleAllowedForControllerAction($controller, '*', $role );
 		}
 		return false;
 	}
