@@ -190,7 +190,7 @@ class AclList {
 			$aclRoleName = $aclElement->getRole()->getName();
 			if ($aclRoleName === '@ALL' || $aclRoleName === $roleName) {
 				$aclResourceName = $aclElement->getResource()->getName();
-				if ($aclResourceName === '*' || $aclResourceName === $resourceName) {
+				if ($aclResourceName === '*' || $aclResourceName === $resourceName || \strpos($resourceName, $aclResourceName.'.')!==false) {
 					$result[] = $aclElement;
 				}
 			}
