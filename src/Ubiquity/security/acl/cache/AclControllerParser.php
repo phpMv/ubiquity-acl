@@ -94,8 +94,12 @@ class AclControllerParser {
 					AclManager::addResource($annotResource->name, $controller . '.' . $action);
 				}
 				if ($annotPermission) {
-					$permission = $annotPermission->name;
-					AclManager::addPermission($annotPermission->name, $annotPermission->level ?? 0);
+					if(\is_int($annotPermission->name) && !isset($annotPermission->level)){
+						$annotPermission->level=$annotPermission->name;
+						$annotPermission->name=null;
+					}
+					$permission = $annotPermission->name??\strtoupper($action);
+					AclManager::addPermission($permission, $annotPermission->level ?? 0);
 					$hasPermission = true;
 				}
 				$resource ??= $this->mainResource ? $this->mainResource->name : ($controller . '.' . $action);
