@@ -30,7 +30,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals(3, \count(AclManager::getAcls()));
 		$this->assertEquals(2, count(AclManager::getRoles()));
 		$this->assertEquals(7, count(AclManager::getPermissions()));
-		$this->assertEquals(5, count(AclManager::getResources()));
+		$this->assertEquals(4, count(AclManager::getResources()));
 		$this->assertTrue(AclManager::isAllowed('@ALL', 'Home', 'ALLOW'));
 		$this->assertFalse(AclManager::isAllowed('@ALL', 'Home', 'ADMIN'));
 		AclManager::allow('@ALL', 'Home', 'ADMIN');
@@ -136,7 +136,7 @@ class AclCacheProviderTest extends \Codeception\Test\Unit {
 		$this->assertEquals(3, count(AclManager::getRoles()));
 		$this->assertEquals(3, \count(AclManager::getAcls()));
 		$this->assertEquals(4, count(AclManager::getResources()));
-		$this->assertEquals(6, count(AclManager::getPermissions()));
+		$this->assertEquals(7, count(AclManager::getPermissions()));
 
 		$this->assertTrue(AclManager::isAllowed('@ALL', 'Home', 'ALLOW'));
 		$this->assertTrue(AclManager::isAllowed('@OTHER', 'Other', 'ALLOW_OTHER'));
