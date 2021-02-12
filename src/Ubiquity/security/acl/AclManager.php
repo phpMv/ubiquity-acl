@@ -13,6 +13,7 @@ use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
 use Ubiquity\security\acl\persistence\AclCacheProvider;
+use Ubiquity\controllers\Router;
 
 /**
  * Ubiquity\security\acl$AclManager
@@ -185,6 +186,30 @@ class AclManager {
 	 */
 	public static function isAllowed(string $role, ?string $resource = '*', ?string $permission = 'ALL'): bool {
 		return self::$aclList->isAllowed($role, $resource ?? '*', $permission ?? 'ALL');
+	}
+	
+	public static function isAllowedRoute(string $role,string $routeName){
+		$routeInfo=Router::getRouteInfoByName($name);
+		if (!isset ( $routeDetails ['controller'] )) {
+			$routeInfo=current($routeInfo);
+		}
+		$controller=$routeInfo['controller']??null;
+		$action=$routeInfo['action']??null;
+		if(isset($controller) && isset($action)){
+			$resourceController = self::getPermissionMap ()->getRessourcePermission ( $controller, $action );
+			if (isset ( $resourceController )) {
+				try{
+					if (self::isAllowed ( $role, $resourceController ['resource'], $resourceController ['permission'] )) {
+						return true;
+					}
+				}
+				catch(AclException $e){
+					//Nothing to do
+				}
+			}
+			return false;
+		}
+		return false;
 	}
 
 	/**
