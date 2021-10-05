@@ -14,30 +14,23 @@ use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
 use Ubiquity\security\acl\persistence\AclCacheProvider;
 use Ubiquity\controllers\Router;
+use Ubiquity\security\acl\persistence\AclProviderInterface;
 
 /**
  * Ubiquity\security\acl$AclManager
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 class AclManager {
 
-	/**
-	 *
-	 * @var AclList
-	 */
-	protected static $aclList;
+	protected static AclList $aclList;
 
-	/**
-	 *
-	 * @var PermissionsMap
-	 */
-	protected static $permissionMap;
+	protected static PermissionsMap $permissionMap;
 
-	protected static $providersPersistence;
+	protected static array $providersPersistence;
 
 	/**
 	 * Create AclList with default roles and resources.
@@ -146,7 +139,7 @@ class AclManager {
 		return AclManager::$aclList;
 	}
 
-	public static function getPermissions() {
+	public static function getPermissions():array {
 		return self::$aclList->getPermissions();
 	}
 
@@ -158,8 +151,8 @@ class AclManager {
 	 * Allow role to access to resource with the permission.
 	 *
 	 * @param string $role
-	 * @param string $resource
-	 * @param string $permission
+	 * @param ?string $resource
+	 * @param ?string $permission
 	 */
 	public static function allow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
 		self::$aclList->allow($role, $resource ?? '*', $permission ?? 'ALL');
@@ -169,8 +162,8 @@ class AclManager {
 	 * Add role, resource and permission and allow this role to access to resource with the permission.
 	 *
 	 * @param string $role
-	 * @param string $resource
-	 * @param string $permission
+	 * @param ?string $resource
+	 * @param ?string $permission
 	 */
 	public static function addAndAllow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
 		self::$aclList->addAndAllow($role, $resource ?? '*', $permission ?? 'ALL');
@@ -180,8 +173,8 @@ class AclManager {
 	 * Check if access to resource is allowed for role with the permission.
 	 *
 	 * @param string $role
-	 * @param string $resource
-	 * @param string $permission
+	 * @param ?string $resource
+	 * @param ?string $permission
 	 * @return bool
 	 */
 	public static function isAllowed(string $role, ?string $resource = '*', ?string $permission = 'ALL'): bool {
@@ -189,7 +182,7 @@ class AclManager {
 	}
 	
 	public static function isAllowedRoute(string $role,string $routeName){
-		$routeInfo=Router::getRouteInfoByName($name);
+		$routeInfo=Router::getRouteInfoByName($routeName);
 		if (!isset ( $routeDetails ['controller'] )) {
 			$routeInfo=current($routeInfo);
 		}
@@ -247,9 +240,9 @@ class AclManager {
 	 *
 	 * @param string $role
 	 * @param string $resource
-	 * @param string $permission
+	 * @param ?string $permission
 	 */
-	public static function removeAcl(string $role, string $resource, string $permission = null) {
+	public static function removeAcl(string $role, string $resource, ?string $permission = null) {
 		self::$aclList->removeAcl($role, $resource, $permission);
 	}
 
@@ -298,7 +291,7 @@ class AclManager {
 	 *
 	 * @return \Ubiquity\security\acl\cache\PermissionsMap
 	 */
-	public static function getPermissionMap() {
+	public static function getPermissionMap():PermissionsMap {
 		if (! isset(self::$permissionMap)) {
 			self::$permissionMap = new PermissionsMap();
 			self::$permissionMap->load();
@@ -313,7 +306,7 @@ class AclManager {
 	 * @param string $resource
 	 * @param string $permission
 	 */
-	public static function associate(string $controller, string $action, string $resource, string $permission = 'ALL') {
+	public static function associate(string $controller, string $action, string $resource, string $permission = 'ALL'):void {
 		self::$aclList->getResourceByName($resource);
 		self::$aclList->getPermissionByName($permission);
 		self::$permissionMap->addAction($controller, $action, $resource, $permission);
@@ -325,7 +318,7 @@ class AclManager {
 	 * @param string $providerClass
 	 * @return boolean
 	 */
-	public static function existPartIn(AbstractAclPart $part, string $providerClass) {
+	public static function existPartIn(AbstractAclPart $part, string $providerClass):bool {
 		return self::$aclList->existPartIn($part, $providerClass);
 	}
 
@@ -335,16 +328,16 @@ class AclManager {
 	 * @param string $providerClass
 	 * @return boolean
 	 */
-	public static function existAclIn(AclElement $elm, string $providerClass) {
+	public static function existAclIn(AclElement $elm, string $providerClass):bool {
 		return self::$aclList->existAclIn($elm, $providerClass);
 	}
 
 	/**
 	 *
 	 * @param string $providerClass
-	 * @return \Ubiquity\security\acl\persistence\AclProviderInterface|NULL
+	 * @return AclProviderInterface|NULL
 	 */
-	public static function getProvider(string $providerClass) {
+	public static function getProvider(string $providerClass):?AclProviderInterface {
 		return self::$aclList->getProvider($providerClass);
 	}
 
@@ -359,7 +352,7 @@ class AclManager {
 		return $result;
 	}
 
-	public static function filterProviders(string $providerClass) {
+	public static function filterProviders(string $providerClass):void {
 		$providers = self::$aclList->getProviders();
 		$filter = [];
 		foreach ($providers as $prov) {
@@ -371,7 +364,7 @@ class AclManager {
 		self::$providersPersistence = $providers;
 	}
 
-	public static function removefilterProviders() {
+	public static function removefilterProviders():void {
 		self::$aclList->setProviders(self::$providersPersistence);
 	}
 }

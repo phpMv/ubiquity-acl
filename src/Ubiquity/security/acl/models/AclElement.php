@@ -1,5 +1,15 @@
 <?php
+
 namespace Ubiquity\security\acl\models;
+
+/**
+ * Ubiquity\security\acl\models$AclElement
+ * This class is part of Ubiquity
+ *
+ * @author jc
+ * @version 1.0.1
+ *
+ */
 
 class AclElement {
 
@@ -8,6 +18,7 @@ class AclElement {
 	 * @id
 	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
 	 */
+	#[\Ubiquity\attributes\items\Id()]
 	protected $id;
 
 	/**
@@ -16,6 +27,8 @@ class AclElement {
 	 * @manyToOne
 	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Role","name"=>"idRole","nullable"=>false)
 	 */
+	#[\Ubiquity\attributes\items\ManyToOne()]
+	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Role",name: "idRole", nullable: false)]
 	protected $role;
 
 	/**
@@ -24,6 +37,8 @@ class AclElement {
 	 * @manyToOne
 	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Permission","name"=>"idPermission","nullable"=>false)
 	 */
+	#[\Ubiquity\attributes\items\ManyToOne()]
+	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Permission",name: "idPermission", nullable: false)]
 	protected $permission;
 
 	/**
@@ -32,6 +47,8 @@ class AclElement {
 	 * @manyToOne
 	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Resource","name"=>"idResource","nullable"=>false)
 	 */
+	#[\Ubiquity\attributes\items\ManyToOne()]
+	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Resource",name: "idResource", nullable: false)]
 	protected $resource;
 
 	/**

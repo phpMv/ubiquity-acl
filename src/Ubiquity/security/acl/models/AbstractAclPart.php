@@ -1,4 +1,5 @@
 <?php
+
 namespace Ubiquity\security\acl\models;
 
 /**
@@ -6,7 +7,7 @@ namespace Ubiquity\security\acl\models;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 abstract class AbstractAclPart {
@@ -16,6 +17,7 @@ abstract class AbstractAclPart {
 	 * @id
 	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
 	 */
+	#[\Ubiquity\attributes\items\Id()]
 	protected $id;
 
 	/**
