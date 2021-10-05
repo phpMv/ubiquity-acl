@@ -1,13 +1,14 @@
 <?php
 namespace Ubiquity\security\acl\persistence;
 
+use Ubiquity\cache\CacheManager;
+use Ubiquity\controllers\Startup;
 use Ubiquity\orm\DAO;
 use Ubiquity\security\acl\models\AbstractAclPart;
 use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\models\Permission;
 use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
-use Ubiquity\orm\OrmUtils;
 
 /**
  * Load and save Acls with a database using DAO.
@@ -15,29 +16,38 @@ use Ubiquity\orm\OrmUtils;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 class AclDAOProvider implements AclProviderInterface {
 
-	protected $aclClass;
+	protected string $aclClass;
 
-	protected $roleClass;
+	protected string $roleClass;
 
-	protected $permissionClass;
+	protected string $permissionClass;
 
-	protected $resourceClass;
+	protected string $resourceClass;
 
 	/**
-	 *
+	 * @param array $config The $config array
 	 * @param array $classes
 	 *        	associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
 	 */
-	public function __construct($classes = []) {
+	public function __construct(array &$config,$classes = []) {
+		Startup::$config=$config;
 		$this->aclClass = $classes['acl'] ?? AclElement::class;
 		$this->roleClass = $classes['role'] ?? Role::class;
 		$this->resourceClass = $classes['resource'] ?? Resource::class;
 		$this->permissionClass = $classes['permission'] ?? Permission::class;
+	}
+
+	public function initModelsCache(&$config) {
+		CacheManager::start($config);
+		CacheManager::createOrmModelCache($this->aclClass);
+		CacheManager::createOrmModelCache($this->roleClass);
+		CacheManager::createOrmModelCache($this->resourceClass);
+		CacheManager::createOrmModelCache($this->permissionClass);
 	}
 
 	public function setDbOffset($dbOffset = 'default') {
