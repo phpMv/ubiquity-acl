@@ -3,7 +3,10 @@ namespace Ubiquity\security\acl\persistence;
 
 use Ubiquity\cache\CacheManager;
 use Ubiquity\controllers\Startup;
+use Ubiquity\db\reverse\DbGenerator;
+use Ubiquity\exceptions\AclException;
 use Ubiquity\orm\DAO;
+use Ubiquity\orm\reverse\DatabaseReversor;
 use Ubiquity\security\acl\models\AbstractAclPart;
 use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\models\Permission;
@@ -42,6 +45,10 @@ class AclDAOProvider implements AclProviderInterface {
 		$this->permissionClass = $classes['permission'] ?? Permission::class;
 	}
 
+	/**
+	 * Initialize the cache for the ACL models.
+	 * @param $config
+	 */
 	public function initModelsCache(&$config) {
 		CacheManager::start($config);
 		CacheManager::createOrmModelCache($this->aclClass);
@@ -50,11 +57,33 @@ class AclDAOProvider implements AclProviderInterface {
 		CacheManager::createOrmModelCache($this->permissionClass);
 	}
 
-	public function setDbOffset($dbOffset = 'default') {
+	/**
+	 * Defines the database offset used for ACL.
+	 * @param string $dbOffset
+	 */
+	public function setDbOffset(string $dbOffset = 'default'):void {
 		DAO::setModelDatabase($this->aclClass, $dbOffset);
 		DAO::setModelDatabase($this->resourceClass, $dbOffset);
 		DAO::setModelDatabase($this->roleClass, $dbOffset);
 		DAO::setModelDatabase($this->permissionClass, $dbOffset);
+	}
+
+	/**
+	 * Generates the tables for ACL model classes.
+	 * @param string $dbOffset
+	 * @param bool $createDb
+	 * @throws AclException
+	 */
+	public function generateDbTables(string $dbOffset='default',bool $createDb=false):void{
+		$this->setDbOffset($dbOffset);
+		$generator = new DatabaseReversor(new DbGenerator(), $dbOffset);
+		$activeOffsetValue=DAO::getDbOffset(Startup::$config,$dbOffset);
+		if(($dbName=$activeOffsetValue['dbName']??'')!='') {
+			$generator->setModels([$this->aclClass,$this->roleClass,$this->resourceClass,$this->permissionClass]);
+			$generator->createDatabase($dbName, $createDb);
+		}else{
+			throw new AclException('dbName key is not present or his value is empty!');
+		}
 	}
 
 	/**
