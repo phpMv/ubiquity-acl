@@ -140,8 +140,8 @@ class AclDAOProviderTest extends \Codeception\Test\Unit {
 	}
 
 	protected function initProvider() {
-		AclManager::initFromProviders(Startup::$config,[
-			new AclDAOProvider([
+		AclManager::initFromProviders([
+			new AclDAOProvider(Startup::$config,[
 				'acl' => \models\acls\Aclelement::class,
 				'role' => \models\acls\Role::class,
 				'resource' => \models\acls\Resource::class,
