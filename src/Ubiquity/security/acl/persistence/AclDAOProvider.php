@@ -2,11 +2,13 @@
 namespace Ubiquity\security\acl\persistence;
 
 use Ubiquity\cache\CacheManager;
+use Ubiquity\cache\ClassUtils;
 use Ubiquity\controllers\Startup;
 use Ubiquity\db\reverse\DbGenerator;
 use Ubiquity\exceptions\AclException;
 use Ubiquity\orm\DAO;
 use Ubiquity\orm\reverse\DatabaseReversor;
+use Ubiquity\scaffolding\creators\ClassCreator;
 use Ubiquity\security\acl\models\AbstractAclPart;
 use Ubiquity\security\acl\models\AclElement;
 use Ubiquity\security\acl\models\Permission;
@@ -66,6 +68,26 @@ class AclDAOProvider implements AclProviderInterface {
 		DAO::setModelDatabase($this->resourceClass, $dbOffset);
 		DAO::setModelDatabase($this->roleClass, $dbOffset);
 		DAO::setModelDatabase($this->permissionClass, $dbOffset);
+	}
+
+	/**
+	 * Generates the models.
+	 * @param array $classes associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
+	 */
+	public function createModels(array $classes=[]):void{
+		$this->createModel($classes['acl'] ?? $this->aclClass,AclElement::class);
+		$this->createModel($classes['role'] ?? $this->roleClass,Role::class);
+		$this->createModel($classes['resource'] ?? $this->resourceClass,Resource::class;
+		$this->createModel($classes['permission'] ?? $this->permissionClass,Permission::class);
+	}
+
+	public function createModel($modelName,$refName):void{
+		if($modelName!==$refName){
+			$className=ClassUtils::getClassSimpleName($modelName);
+			$ns=ClassUtils::getNamespaceFromCompleteClassname($modelName);
+			$cCreator=new ClassCreator($className,'',$ns,' extends '.$refName);
+			$cCreator->generate();
+		}
 	}
 
 	/**
