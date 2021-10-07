@@ -77,7 +77,7 @@ class AclDAOProvider implements AclProviderInterface {
 	public function createModels(array $classes=[]):void{
 		$this->createModel($classes['acl'] ?? $this->aclClass,AclElement::class);
 		$this->createModel($classes['role'] ?? $this->roleClass,Role::class);
-		$this->createModel($classes['resource'] ?? $this->resourceClass,Resource::class;
+		$this->createModel($classes['resource'] ?? $this->resourceClass,Resource::class);
 		$this->createModel($classes['permission'] ?? $this->permissionClass,Permission::class);
 	}
 
