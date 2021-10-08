@@ -103,6 +103,10 @@ class AclDAOProvider implements AclProviderInterface {
 		if(($dbName=$activeOffsetValue['dbName']??'')!='') {
 			$generator->setModels([$this->aclClass,$this->roleClass,$this->resourceClass,$this->permissionClass]);
 			$generator->createDatabase($dbName, $createDb);
+			$db=DAO::getDatabase($dbOffset);
+			$db->beginTransaction();
+			$db->execute($generator->__toString());
+			$db->commit();
 		}else{
 			throw new AclException('dbName key is not present or his value is empty!');
 		}
