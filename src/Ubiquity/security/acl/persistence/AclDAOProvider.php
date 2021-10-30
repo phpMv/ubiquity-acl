@@ -62,12 +62,16 @@ class AclDAOProvider implements AclProviderInterface {
 	/**
 	 * Defines the database offset used for ACL.
 	 * @param string $dbOffset
+	 * @param  bool $persist
 	 */
-	public function setDbOffset(string $dbOffset = 'default'):void {
+	public function setDbOffset(string $dbOffset = 'default',bool $persist=true):void {
 		DAO::setModelDatabase($this->aclClass, $dbOffset);
 		DAO::setModelDatabase($this->resourceClass, $dbOffset);
 		DAO::setModelDatabase($this->roleClass, $dbOffset);
 		DAO::setModelDatabase($this->permissionClass, $dbOffset);
+		if($persist){
+			CacheManager::storeModelsDatabases(DAO::$modelsDatabase);
+		}
 	}
 
 	/**
@@ -267,4 +271,3 @@ class AclDAOProvider implements AclProviderInterface {
 
 	public function clearAll(): void {}
 }
-
