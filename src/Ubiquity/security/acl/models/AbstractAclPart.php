@@ -18,6 +18,7 @@ abstract class AbstractAclPart {
 	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
 	 */
 	#[\Ubiquity\attributes\items\Id()]
+	#[\Ubiquity\attributes\items\Column(name:'id',nullable:false,dbType:'int(11)')]
 	protected $id;
 
 	/**
