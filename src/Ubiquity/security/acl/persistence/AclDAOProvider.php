@@ -70,7 +70,7 @@ class AclDAOProvider implements AclProviderInterface {
 		DAO::setModelDatabase($this->roleClass, $dbOffset);
 		DAO::setModelDatabase($this->permissionClass, $dbOffset);
 		if($persist){
-			CacheManager::storeModelsDatabases(DAO::$modelsDatabase);
+			CacheManager::storeModelsDatabases(DAO::getModelsDatabases ());
 		}
 	}
 
