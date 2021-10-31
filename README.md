@@ -62,6 +62,29 @@ class TestAclController extends ControllerBase {
 }
 ```
 
+#### Overriding
+It is necessary to override the _getRole method so that it returns the role of the active user:
+
+```php
+namespace controllers;
+use Ubiquity\attributes\items\acl\Resource;
+use Ubiquity\attributes\items\acl\Allow;use Ubiquity\utils\http\USession;
+use Ubiquity\utils\http\USession;
+
+#[Resource('Main')]
+#[Allow(role: '@USER')]
+class TestAclController extends ControllerBase {
+	use AclControllerTrait;
+	
+	public function _getRole(){
+	    $activeUser=USession::get('activeUser');
+	    if(isset($activeUser)){
+	        return $activeUser->getRole();
+	    }
+	}
+}
+```
+
 ### Defining ACLs with Database
 The ACLs defined in the database are additional to the ACLs defined via annotations or attributes.
 
