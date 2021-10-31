@@ -270,4 +270,23 @@ class AclDAOProvider implements AclProviderInterface {
 	}
 
 	public function clearAll(): void {}
+
+	/**
+	 * Initializes AclDAOProvider and creates ACL tables in the specified dbOffset.
+	 * Do not use in production
+	 *
+	 * @param array $config
+	 * @param string $dbOffset
+	 * @param array $classes
+	 *        	associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
+	 * @return AclDAOProvider
+	 * @throws AclException
+	 */
+	public static function initializeProvider(array $config,string $dbOffset='default',array $classes = []): AclDAOProvider {
+		$dbProvider=new AclDAOProvider($config,$classes);
+		$dbProvider->initModelsCache($config);
+		$dbProvider->setDbOffset($dbOffset);
+		$dbProvider->generateDbTables($dbOffset);
+		return $dbProvider;
+	}
 }

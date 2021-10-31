@@ -61,3 +61,33 @@ class TestAclController extends ControllerBase {
 	use AclControllerTrait;
 }
 ```
+
+### Defining ACLs with Database
+The ACLs defined in the database are additional to the ACLs defined via annotations or attributes.
+
+#### Initializing
+The initialization allows to create the tables associated to the ACLs (`Role`, `Resource`, `Permission`, `AclElement`).
+It needs to be done only once, and in dev mode only.
+```php
+use Ubiquity\controllers\Startup;
+use Ubiquity\security\acl\AclManager;
+
+$config=Startup::$config;
+AclManager::initializeDAOProvider($config, 'default');
+```
+
+#### Starting
+In `app/config/services.php` file :
+```php
+use Ubiquity\security\acl\AclManager;
+use Ubiquity\security\acl\persistence\AclCacheProvider;
+use Ubiquity\security\acl\persistence\AclDAOProvider;
+use Ubiquity\orm\DAO;
+
+DAO::start();//Optional, to use only if dbOffset is not default
+
+AclManager::start();
+AclManager::initFromProviders([
+	new AclCacheProvider(), new AclDAOProvider($config)
+]);
+```

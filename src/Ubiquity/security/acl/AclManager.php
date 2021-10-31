@@ -14,6 +14,7 @@ use Ubiquity\security\acl\models\Resource;
 use Ubiquity\security\acl\models\Role;
 use Ubiquity\security\acl\persistence\AclCacheProvider;
 use Ubiquity\controllers\Router;
+use Ubiquity\security\acl\persistence\AclDAOProvider;
 use Ubiquity\security\acl\persistence\AclProviderInterface;
 
 /**
@@ -366,6 +367,21 @@ class AclManager {
 
 	public static function removefilterProviders():void {
 		self::$aclList->setProviders(self::$providersPersistence);
+	}
+
+	/**
+	 * Initializes AclDAOProvider and creates ACL tables in the specified dbOffset.
+	 * Do not use in production
+	 * @param array $config
+	 * @param string $dbOffset
+	 * @param array $classes
+	 *        	associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
+	 * @return AclDAOProvider
+	 * @throws AclException
+	 */
+	public static function initializeDAOProvider(array &$config, string $dbOffset='default', array $classes=[]): AclDAOProvider {
+		self::start();
+		return AclDAOProvider::initializeProvider($config,$dbOffset,$classes);
 	}
 }
 
