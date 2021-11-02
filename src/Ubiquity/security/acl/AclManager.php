@@ -27,7 +27,7 @@ use Ubiquity\security\acl\persistence\AclProviderInterface;
  */
 class AclManager {
 
-	protected static AclList $aclList;
+	protected static ?AclList $aclList=null;
 
 	protected static PermissionsMap $permissionMap;
 
@@ -40,7 +40,7 @@ class AclManager {
 		self::$aclList = new AclList();
 		self::$aclList->init();
 	}
-	
+
 	/**
 	 * Start the Acls with AclCacheProvider (for attributes or annotations).
 	 */
@@ -55,7 +55,7 @@ class AclManager {
 	 * @return bool
 	 */
 	public static function isStarted(): bool {
-		return self::$aclList !== NULL && (self::$aclList instanceof AclList);
+		return isset(self::$aclList) && (self::$aclList instanceof AclList);
 	}
 
 	/**
@@ -181,7 +181,7 @@ class AclManager {
 	public static function isAllowed(string $role, ?string $resource = '*', ?string $permission = 'ALL'): bool {
 		return self::$aclList->isAllowed($role, $resource ?? '*', $permission ?? 'ALL');
 	}
-	
+
 	public static function isAllowedRoute(string $role,string $routeName){
 		$routeInfo=Router::getRouteInfoByName($routeName);
 		if (!isset ( $routeDetails ['controller'] )) {
@@ -384,4 +384,3 @@ class AclManager {
 		return AclDAOProvider::initializeProvider($config,$dbOffset,$classes);
 	}
 }
-
