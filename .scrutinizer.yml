@@ -14,6 +14,8 @@ build:
       environment:
         php:
           version: 8.0
+          ini:
+            "xdebug.mode": coverage
       services:
           mysql: 5.7
       tests:
