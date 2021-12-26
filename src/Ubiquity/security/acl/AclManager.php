@@ -182,10 +182,10 @@ class AclManager {
 		return self::$aclList->isAllowed($role, $resource ?? '*', $permission ?? 'ALL');
 	}
 
-	public static function isAllowedRoute(string $role,string $routeName){
+	public static function isAllowedRoute(string $role,string $routeName): bool {
 		$routeInfo=Router::getRouteInfoByName($routeName);
-		if (!isset ( $routeDetails ['controller'] )) {
-			$routeInfo=current($routeInfo);
+		if (!isset ( $routeInfo ['controller'] )) {
+			$routeInfo=\current($routeInfo);
 		}
 		$controller=$routeInfo['controller']??null;
 		$action=$routeInfo['action']??null;
@@ -209,7 +209,7 @@ class AclManager {
 	/**
 	 * Save all acls,roles, resources and permissions for AclProviders with no autoSave.
 	 */
-	public static function saveAll() {
+	public static function saveAll(): void {
 		self::$aclList->saveAll();
 	}
 
