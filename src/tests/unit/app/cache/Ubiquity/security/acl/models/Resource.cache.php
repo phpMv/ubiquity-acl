@@ -1,2 +1,12 @@
 <?php
-return array("#tableName"=>"Resource","#primaryKeys"=>array("id"=>"id"),"#manyToOne"=>array(),"#fieldNames"=>array("value"=>"value","id"=>"id","name"=>"name"),"#memberNames"=>array("value"=>"value","id"=>"id","name"=>"name"),"#fieldTypes"=>array("value"=>"mixed","id"=>"int(11)","name"=>"mixed"),"#nullable"=>array(),"#notSerializable"=>array(),"#transformers"=>array(),"#accessors"=>array("value"=>"setValue","id"=>"setId","name"=>"setName"));
+return array(
+	"#tableName"=>"Resource",
+	"#primaryKeys"=>["name"=>"name"],
+	"#manyToOne"=>[],
+	"#fieldNames"=>["value"=>"value","name"=>"name"],
+	"#memberNames"=>["value"=>"value","name"=>"name"],
+	"#fieldTypes"=>["value"=>"mixed","name"=>"varchar(100)"],
+	"#nullable"=>[],
+	"#notSerializable"=>[],
+	"#transformers"=>[],
+	"#accessors"=>["value"=>"setValue","name"=>"setName"]);

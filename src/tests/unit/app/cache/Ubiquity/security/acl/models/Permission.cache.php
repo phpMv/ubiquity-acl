@@ -1,2 +1,13 @@
 <?php
-return array("#tableName"=>"Permission","#primaryKeys"=>array("id"=>"id"),"#manyToOne"=>array(),"#fieldNames"=>array("level"=>"level","id"=>"id","name"=>"name"),"#memberNames"=>array("level"=>"level","id"=>"id","name"=>"name"),"#fieldTypes"=>array("level"=>"int(11)","id"=>"int(11)","name"=>"mixed"),"#nullable"=>array(),"#notSerializable"=>array(),"#transformers"=>array(),"#accessors"=>array("level"=>"setLevel","id"=>"setId","name"=>"setName"));
+return array(
+	"#tableName"=>"Permission",
+	"#primaryKeys"=>["name"=>"name"],
+	"#manyToOne"=>[],
+	"#fieldNames"=>["level"=>"level","name"=>"name"],
+	"#memberNames"=>["level"=>"level","name"=>"name"],
+	"#fieldTypes"=>["level"=>"mixed","name"=>"varchar(100)"],
+	"#nullable"=>[],
+	"#notSerializable"=>[],
+	"#transformers"=>[],
+	"#accessors"=>["level"=>"setLevel","name"=>"setName"]
+);
