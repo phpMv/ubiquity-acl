@@ -1,6 +1,6 @@
 <?php
 return array(
-	"#tableName"=>"aclelement",
+	"#tableName"=>"AclElement",
 	"#primaryKeys"=>["id"=>"id"],
 	"#manyToOne"=>["role","permission","resource"],
 	"#fieldNames"=>["id"=>"id","role"=>"roleName","permission"=>"permissionName","resource"=>"resourceName"],
