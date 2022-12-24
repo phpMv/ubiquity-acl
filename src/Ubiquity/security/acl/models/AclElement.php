@@ -7,7 +7,7 @@ namespace Ubiquity\security\acl\models;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.1
+ * @version 1.0.2
  *
  */
 
@@ -26,30 +26,30 @@ class AclElement {
 	 *
 	 * @var Role
 	 * @manyToOne
-	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Role","name"=>"idRole","nullable"=>false)
+	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Role","name"=>"roleName","nullable"=>false)
 	 */
 	#[\Ubiquity\attributes\items\ManyToOne()]
-	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Role",name: "idRole", nullable: false)]
+	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Role",name: "roleName", nullable: false)]
 	protected $role;
 
 	/**
 	 *
 	 * @var Permission
 	 * @manyToOne
-	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Permission","name"=>"idPermission","nullable"=>false)
+	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Permission","name"=>"permissionName","nullable"=>false)
 	 */
 	#[\Ubiquity\attributes\items\ManyToOne()]
-	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Permission",name: "idPermission", nullable: false)]
+	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Permission",name: "permissionName", nullable: false)]
 	protected $permission;
 
 	/**
 	 *
 	 * @var \Ubiquity\security\acl\models\Resource
 	 * @manyToOne
-	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Resource","name"=>"idResource","nullable"=>false)
+	 * @joinColumn("className"=>"Ubiquity\\security\\acl\\models\\Resource","name"=>"resourceName","nullable"=>false)
 	 */
 	#[\Ubiquity\attributes\items\ManyToOne()]
-	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Resource",name: "idResource", nullable: false)]
+	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Resource",name: "resourceName", nullable: false)]
 	protected $resource;
 
 	/**

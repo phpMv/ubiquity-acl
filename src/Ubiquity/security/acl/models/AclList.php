@@ -125,7 +125,7 @@ class AclList {
 
 	public function loadPermissions(): array {
 		foreach ($this->providers as $provider) {
-			$this->permissions += $provider->loadAllPermissions();
+			$this->permissions+=$provider->loadAllPermissions();
 		}
 		return $this->permissions;
 	}

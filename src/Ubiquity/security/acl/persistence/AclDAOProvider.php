@@ -21,7 +21,7 @@ use Ubiquity\security\acl\models\Role;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.1
+ * @version 1.0.2
  *
  */
 class AclDAOProvider implements AclProviderInterface {
@@ -76,9 +76,12 @@ class AclDAOProvider implements AclProviderInterface {
 
 	/**
 	 * Generates the models.
-	 * @param array $classes associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
+	 * @param ?array $classes associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
 	 */
-	public function createModels(array $classes=[]):void{
+	public function createModels(?array $classes=null):void{
+		$classes??=[
+			'acl'=>'models\\AclElement','role'=>'models\\Role','resource'=>'models\\Resource','permission'=>'models\\Permission'
+		];
 		$this->createModel($classes['acl'] ?? $this->aclClass,AclElement::class);
 		$this->createModel($classes['role'] ?? $this->roleClass,Role::class);
 		$this->createModel($classes['resource'] ?? $this->resourceClass,Resource::class);
@@ -89,7 +92,7 @@ class AclDAOProvider implements AclProviderInterface {
 		if($modelName!==$refName){
 			$className=ClassUtils::getClassSimpleName($modelName);
 			$ns=ClassUtils::getNamespaceFromCompleteClassname($modelName);
-			$cCreator=new ClassCreator($className,'',$ns,' extends '.$refName);
+			$cCreator=new ClassCreator($className,'',$ns,' extends \\'.$refName);
 			$cCreator->generate();
 		}
 	}
@@ -131,6 +134,15 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::saveAcl()
 	 */
 	public function saveAcl(AclElement $aclElement) {
+		if(!$this->existPart($aclElement->getResource())){
+			$this->savePart($aclElement->getResource());
+		}
+		if(!$this->existPart($aclElement->getPermission())){
+			$this->savePart($aclElement->getPermission());
+		}
+		if(!$this->existPart($aclElement->getRole())){
+			$this->savePart($aclElement->getRole());
+		}
 		$object = $this->castElement($aclElement);
 		$res = DAO::save($object);
 		if ($res) {
@@ -198,7 +210,7 @@ class AclDAOProvider implements AclProviderInterface {
 		$object = $this->castElement($part);
 		$res = DAO::insert($object);
 		if ($res) {
-			$part->setId($object->getId());
+			$part->setName($object->getName());
 		}
 		return $res;
 	}
@@ -229,8 +241,8 @@ class AclDAOProvider implements AclProviderInterface {
 
 	public function existPart(AbstractAclPart $part): bool {
 		$elm = $this->castElement($part);
-		return DAO::exists(\get_class($elm), 'id= ?', [
-			$elm->getId()
+		return DAO::exists(\get_class($elm), 'name= ?', [
+			$elm->getName()
 		]);
 	}
 

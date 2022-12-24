@@ -15,16 +15,10 @@ abstract class AbstractAclPart {
 	/**
 	 *
 	 * @id
-	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
+	 * @column("name"=>"name","nullable"=>false,"dbType"=>"varchar(100)")
 	 */
 	#[\Ubiquity\attributes\items\Id()]
-	#[\Ubiquity\attributes\items\Column(name:'id',nullable:false,dbType:'int(11)')]
-	protected $id;
-
-	/**
-	 *
-	 * @var string
-	 */
+	#[\Ubiquity\attributes\items\Column(name:'name',nullable:false,dbType:'varchar(100)')]
 	protected $name;
 
 	public function __construct(?string $name = null) {
@@ -36,6 +30,10 @@ abstract class AbstractAclPart {
 	 * @return mixed
 	 */
 	public function getName() {
+		return $this->name;
+	}
+
+	public function getId_() {
 		return $this->name;
 	}
 
@@ -55,26 +53,6 @@ abstract class AbstractAclPart {
 		foreach ($values as $k => $v) {
 			$this->$k = $v;
 		}
-	}
-
-	/**
-	 *
-	 * @return mixed
-	 */
-	public function getId() {
-		return $this->id;
-	}
-
-	public function getId_() {
-		return $this->name;
-	}
-
-	/**
-	 *
-	 * @param mixed $id
-	 */
-	public function setId($id) {
-		$this->id = $id;
 	}
 
 	public function __toString() {
