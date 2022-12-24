@@ -3,7 +3,7 @@ USE `acls`;
 CREATE TABLE `Role` (`parents` varchar(30) NOT NULL,`name` varchar(30) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE `Permission` (`level` int(11) NOT NULL,`name` varchar(30) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE `Resource` (`value` varchar(30) NOT NULL,`name` varchar(30) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-CREATE TABLE `AclElement` (`id` int(11) NOT NULL,`roleName` int(11) NOT NULL,`permissionName` int(11) NOT NULL,`resourceName` int(11) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `AclElement` (`id` int(11) NOT NULL,`roleName` varchar(30) NOT NULL,`permissionName` varchar(30) NOT NULL,`resourceName` varchar(30) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `Role` ADD PRIMARY KEY (`name`);
 ALTER TABLE `Permission` ADD PRIMARY KEY (`name`);
 ALTER TABLE `Resource` ADD PRIMARY KEY (`name`);
