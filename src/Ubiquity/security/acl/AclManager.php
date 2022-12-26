@@ -283,7 +283,7 @@ class AclManager {
 		self::removefilterProviders();
 		self::reloadFromSelectedProviders();
 		if (!$silent) {
-			echo 'ACLs cache reset';
+			echo "ACLs cache reset\n";
 		}
 	}
 
