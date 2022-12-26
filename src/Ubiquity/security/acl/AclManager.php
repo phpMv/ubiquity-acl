@@ -77,7 +77,7 @@ class AclManager {
 	 *
 	 * @param array|string $selectedProviders
 	 */
-	public static function reloadFromSelectedProviders($selectedProviders = '*') {
+	public static function reloadFromSelectedProviders($selectedProviders = '*'): void {
 		$sProviders = self::$aclList->getProviders();
 		self::$aclList->clear();
 		$providers = [];
@@ -90,45 +90,45 @@ class AclManager {
 		self::$aclList->setProviders($sProviders);
 	}
 
-	public static function addRole(string $name, ?array $parents = []) {
+	public static function addRole(string $name, ?array $parents = []): void {
 		self::$aclList->addRole(new Role($name, $parents));
 	}
 
-	public static function addRoles(array $nameParents) {
+	public static function addRoles(array $nameParents): void {
 		foreach ($nameParents as $name => $parents) {
 			self::$aclList->addRole(new Role($name, $parents));
 		}
 	}
 
-	public static function addResource(string $name, ?string $value = null) {
+	public static function addResource(string $name, ?string $value = null): void {
 		self::$aclList->addResource(new Resource($name, $value));
 	}
 
-	public static function addResources(array $nameValue) {
+	public static function addResources(array $nameValue): void {
 		foreach ($nameValue as $name => $value) {
 			self::$aclList->addResource(new Resource($name, $value));
 		}
 	}
 
-	public static function addPermission(string $name, int $level = 0) {
+	public static function addPermission(string $name, int $level = 0): void {
 		self::$aclList->addPermission(new Permission($name, $level));
 	}
 
-	public static function addPermissions(array $nameLevel) {
+	public static function addPermissions(array $nameLevel): void {
 		foreach ($nameLevel as $name => $level) {
 			self::$aclList->addPermission(new Permission($name, $level));
 		}
 	}
 
-	public static function setPermissionLevel(string $name, int $level) {
+	public static function setPermissionLevel(string $name, int $level): void {
 		self::$aclList->setPermissionLevel($name, $level);
 	}
 
-	public static function getRoles() {
+	public static function getRoles(): array {
 		return self::$aclList->getRoles();
 	}
 
-	public static function getResources() {
+	public static function getResources(): array {
 		return self::$aclList->getResources();
 	}
 
@@ -136,7 +136,7 @@ class AclManager {
 	 *
 	 * @return \Ubiquity\security\acl\models\AclList
 	 */
-	public static function getAclList() {
+	public static function getAclList(): ?AclList {
 		return AclManager::$aclList;
 	}
 
@@ -155,7 +155,7 @@ class AclManager {
 	 * @param ?string $resource
 	 * @param ?string $permission
 	 */
-	public static function allow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
+	public static function allow(string $role, ?string $resource = '*', ?string $permission = 'ALL'): void {
 		self::$aclList->allow($role, $resource ?? '*', $permission ?? 'ALL');
 	}
 
@@ -166,7 +166,7 @@ class AclManager {
 	 * @param ?string $resource
 	 * @param ?string $permission
 	 */
-	public static function addAndAllow(string $role, ?string $resource = '*', ?string $permission = 'ALL') {
+	public static function addAndAllow(string $role, ?string $resource = '*', ?string $permission = 'ALL'): void {
 		self::$aclList->addAndAllow($role, $resource ?? '*', $permission ?? 'ALL');
 	}
 
@@ -217,7 +217,7 @@ class AclManager {
 	 *
 	 * @param string $role
 	 */
-	public static function removeRole(string $role) {
+	public static function removeRole(string $role): void {
 		self::$aclList->removeRole($role);
 	}
 
@@ -225,7 +225,7 @@ class AclManager {
 	 *
 	 * @param string $permission
 	 */
-	public static function removePermission(string $permission) {
+	public static function removePermission(string $permission): void {
 		self::$aclList->removePermission($permission);
 	}
 
@@ -233,7 +233,7 @@ class AclManager {
 	 *
 	 * @param string $resource
 	 */
-	public static function removeResource(string $resource) {
+	public static function removeResource(string $resource): void {
 		self::$aclList->removeResource($resource);
 	}
 
@@ -243,7 +243,7 @@ class AclManager {
 	 * @param string $resource
 	 * @param ?string $permission
 	 */
-	public static function removeAcl(string $role, string $resource, ?string $permission = null) {
+	public static function removeAcl(string $role, string $resource, ?string $permission = null): void {
 		self::$aclList->removeAcl($role, $resource, $permission);
 	}
 
@@ -254,8 +254,8 @@ class AclManager {
 	 * @param array $config
 	 * @throws \Ubiquity\exceptions\AclException
 	 */
-	public static function initCache(&$config) {
-		if(!self::isStarted()){
+	public static function initCache(array &$config, bool $silent=false): void {
+		if (!self::isStarted()) {
 			self::start();
 			self::initFromProviders([
 				new AclCacheProvider()
@@ -264,7 +264,7 @@ class AclManager {
 		self::filterProviders(AclCacheProvider::class);
 		self::reloadFromSelectedProviders([]);
 		self::registerAnnotations();
-		$files = \Ubiquity\cache\CacheManager::getControllersFiles($config, true);
+		$files = \Ubiquity\cache\CacheManager::getControllersFiles($config, $silent);
 		$parser = new AclControllerParser();
 		$parser->init();
 		foreach ($files as $file) {
@@ -282,9 +282,12 @@ class AclManager {
 		$parser->save();
 		self::removefilterProviders();
 		self::reloadFromSelectedProviders();
+		if (!$silent) {
+			echo 'ACLs cache reset';
+		}
 	}
 
-	protected static function registerAnnotations() {
+	protected static function registerAnnotations(): void {
 		CacheManager::getAnnotationsEngineInstance()->registerAcls();
 	}
 
