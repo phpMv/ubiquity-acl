@@ -13,7 +13,7 @@ use Ubiquity\security\acl\persistence\AclProviderInterface;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.0
+ * @version 1.0.1
  * @property Role[] $roles
  * @property Resource[] $resources
  * @property Permission[] $permissions
@@ -67,7 +67,7 @@ trait AclListOperationsTrait {
 	public function removeRole(string $roleName) {
 		$role = $this->getRoleByName($roleName);
 		unset($this->roles[$roleName]);
-		$this->unsetCache("role_$roleName");
+		$this->unsetCache($roleName);
 		$this->removeAcl($roleName);
 		$this->removePart($role);
 	}
@@ -81,7 +81,7 @@ trait AclListOperationsTrait {
 	public function removePermission(string $permissionName) {
 		$permission = $this->getPermissionByName($permissionName);
 		unset($this->permissions[$permissionName]);
-		$this->unsetCache("perm_$permissionName");
+		$this->unsetCache($permissionName);
 		$this->removeAcl(null, null, $permissionName);
 		$this->removePart($permission);
 	}
@@ -89,7 +89,7 @@ trait AclListOperationsTrait {
 	public function removeResource(string $resourceName) {
 		$resource = $this->getResourceByName($resourceName);
 		unset($this->resources[$resourceName]);
-		$this->unsetCache("res_$resourceName");
+		$this->unsetCache($resourceName);
 		$this->removeAcl(null, $resourceName);
 		$this->removePart($resource);
 	}

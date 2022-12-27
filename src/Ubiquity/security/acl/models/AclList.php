@@ -12,7 +12,7 @@ use Ubiquity\security\acl\persistence\AclCacheProvider;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 class AclList {
@@ -75,13 +75,13 @@ class AclList {
 
 	public function init() {
 		$this->roles = [
-			'role_@ALL' => new Role('@ALL')
+			'@ALL' => new Role('@ALL')
 		];
 		$this->resources = [
-			'res_*' => new Resource('*')
+			'*' => new Resource('*')
 		];
 		$this->permissions = [
-			'perm_ALL' => new Permission('ALL', 1000)
+			'ALL' => new Permission('ALL', 1000)
 		];
 		$this->elementsCache = [];
 		$this->acls = [];
@@ -91,15 +91,15 @@ class AclList {
 	}
 
 	public function getRoleByName(string $name) {
-		return $this->elementsCache["role_$name"] ??= $this->getElementByName($name, $this->roles, 'roles');
+		return $this->elementsCache[$name] ??= $this->getElementByName($name, $this->roles, 'roles');
 	}
 
 	public function getResourceByName(string $name) {
-		return $this->elementsCache["res_$name"] ??= $this->getElementByName($name, $this->resources, 'resources');
+		return $this->elementsCache[$name] ??= $this->getElementByName($name, $this->resources, 'resources');
 	}
 
 	public function getPermissionByName(string $name) {
-		return $this->elementsCache["perm_$name"] ??= $this->getElementByName($name, $this->permissions, 'permissions');
+		return $this->elementsCache[$name] ??= $this->getElementByName($name, $this->permissions, 'permissions');
 	}
 
 	public function loadAcls(): array {
