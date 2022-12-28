@@ -2,6 +2,8 @@
 
 namespace Ubiquity\security\acl\models;
 
+use Ubiquity\attributes\items\Transient;
+
 /**
  * Ubiquity\security\acl\models$AbastractAclElement
  * This class is part of Ubiquity
@@ -20,6 +22,13 @@ abstract class AbstractAclPart {
 	#[\Ubiquity\attributes\items\Id()]
 	#[\Ubiquity\attributes\items\Column(name:'name',nullable:false,dbType:'varchar(100)')]
 	protected $name;
+
+	/**
+	 * @var string
+	 * @transient
+	 */
+	#[Transient]
+	protected $type;
 
 	public function __construct(?string $name = null) {
 		$this->name = $name;
@@ -57,6 +66,20 @@ abstract class AbstractAclPart {
 
 	public function __toString() {
 		return $this->name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType(): string {
+		return $this->type;
+	}
+
+	/**
+	 * @param string $type
+	 */
+	public function setType(string $type): void {
+		$this->type = $type;
 	}
 
 	public function castAs(string $class) {

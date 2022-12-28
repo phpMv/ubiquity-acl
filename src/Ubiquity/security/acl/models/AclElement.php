@@ -2,6 +2,8 @@
 
 namespace Ubiquity\security\acl\models;
 
+use Ubiquity\attributes\items\Transient;
+
 /**
  * Ubiquity\security\acl\models$AclElement
  * This class is part of Ubiquity
@@ -52,6 +54,13 @@ class AclElement {
 	#[\Ubiquity\attributes\items\JoinColumn(className:"Ubiquity\\security\\acl\\models\\Resource",name: "resourceName", nullable: false)]
 	protected $resource;
 
+	/**
+	 * @var string
+	 * @transient
+	 */
+	#[Transient]
+	protected $type;
+	
 	/**
 	 *
 	 * @return Role
@@ -141,6 +150,20 @@ class AclElement {
 	 */
 	public function setResource($resource) {
 		$this->resource = $resource;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType(): string {
+		return $this->type;
+	}
+
+	/**
+	 * @param string $type
+	 */
+	public function setType(string $type): void {
+		$this->type = $type;
 	}
 
 	public function getId_() {
