@@ -13,7 +13,7 @@ use Ubiquity\security\acl\persistence\AclProviderInterface;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.1
+ * @version 1.0.2
  * @property Role[] $roles
  * @property Resource[] $resources
  * @property Permission[] $permissions
@@ -36,7 +36,7 @@ trait AclListOperationsTrait {
 
 	public function saveAclElement(AclElement $aclElement) {
 		foreach ($this->providers as $provider) {
-			$provider->saveAcl($aclElement);
+				$provider->saveAcl($aclElement);
 		}
 	}
 
@@ -52,9 +52,9 @@ trait AclListOperationsTrait {
 		}
 	}
 
-	public function updatePart(AbstractAclPart $aclPart) {
+	public function updatePart(string $id,AbstractAclPart $aclPart) {
 		foreach ($this->providers as $provider) {
-			$provider->updatePart($aclPart);
+			$provider->updatePart($id,$aclPart);
 		}
 	}
 
@@ -136,20 +136,42 @@ trait AclListOperationsTrait {
 		$this->savePart($permission);
 	}
 
+	public function updateRole(String $roleName,Role $role){
+		$oldRole = $this->getRoleByName($roleName);
+		if($oldRole) {
+			$this->updatePart($roleName,$role);
+		}
+	}
+
+	public function updateResource(String $resourceName,Resource $resource){
+		$oldResource = $this->getResourceByName($resourceName);
+		if($oldResource) {
+			$this->updatePart($resourceName,$resource);
+		}
+	}
+
+	public function updatePermission(String $permissionName,Permission $permission){
+		$oldPermission = $this->getPermissionByName($permissionName);
+		if($oldPermission) {
+			$this->updatePart($permissionName,$permission);
+		}
+	}
+
 	public function setPermissionLevel(string $name, int $level) {
 		$perm = $this->getPermissionByName($name);
 		$perm->setLevel($level);
-		$this->updatePart($perm);
+		$this->updatePart($name,$perm);
 	}
 
-	public function allow(string $roleName, string $resourceName, string $permissionName) {
+	public function allow(string $roleName, string $resourceName, string $permissionName, $id=null) {
 		$aclElm = new AclElement();
+		$aclElm->setId($id);
 		$aclElm->allow($this->getRoleByName($roleName), $this->getResourceByName($resourceName), $this->getPermissionByName($permissionName));
 		$this->acls[] = $aclElm;
 		$this->saveAclElement($aclElm);
 	}
 
-	public function addAndAllow(string $roleName, string $resourceName, string $permissionName) {
+	public function addAndAllow(string $roleName, string $resourceName, string $permissionName, $id=null) {
 		if (! $this->elementExistByName($roleName, $this->roles)) {
 			$this->addRole(new Role($roleName));
 		}
@@ -159,7 +181,7 @@ trait AclListOperationsTrait {
 		if ($permissionName !== 'ALL' && ! $this->elementExistByName($permissionName, $this->permissions)) {
 			$this->addPermission(new Permission($permissionName));
 		}
-		$this->allow($roleName, $resourceName ?? '*', $permissionName ?? 'ALL');
+		$this->allow($roleName, $resourceName ?? '*', $permissionName ?? 'ALL', $id);
 	}
 }
 

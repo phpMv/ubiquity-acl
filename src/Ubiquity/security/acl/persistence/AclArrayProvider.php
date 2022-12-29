@@ -90,9 +90,9 @@ abstract class AclArrayProvider implements AclProviderInterface {
 		$this->parts[$class][$part->getName()] = $part->toArray();
 	}
 
-	public function updatePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
+	public function updatePart(string $id,\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		$class = \get_class($part);
-		$this->parts[$class][$part->getName()] = $part->toArray();
+		$this->parts[$class][$id] = $part->toArray();
 	}
 
 	public function removePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {

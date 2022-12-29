@@ -28,7 +28,7 @@ abstract class AbstractAclPart {
 	 * @transient
 	 */
 	#[Transient]
-	protected $type;
+	protected $type='';
 
 	public function __construct(?string $name = null) {
 		$this->name = $name;
@@ -78,7 +78,7 @@ abstract class AbstractAclPart {
 	/**
 	 * @param string $type
 	 */
-	public function setType(string $type): void {
+	public function setType(?string $type): void {
 		$this->type = $type;
 	}
 

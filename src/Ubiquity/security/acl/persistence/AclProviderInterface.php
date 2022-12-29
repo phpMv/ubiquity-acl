@@ -47,7 +47,7 @@ interface AclProviderInterface {
 
 	public function savePart(AbstractAclPart $part);
 
-	public function updatePart(AbstractAclPart $part);
+	public function updatePart(string $id,AbstractAclPart $part);
 
 	public function removePart(AbstractAclPart $part);
 

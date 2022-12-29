@@ -19,6 +19,8 @@ class PermissionMapObject {
 
 	private $roles;
 
+	private $type='';
+
 	public function __construct(?string $controllerAction = '', ?string $resource = '', ?string $permission = '', ?array $roles = []) {
 		$this->controllerAction = $controllerAction;
 		$this->resource = $resource;
@@ -92,6 +94,20 @@ class PermissionMapObject {
 
 	public function getId_() {
 		return $this->controllerAction;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType(): string {
+		return $this->type;
+	}
+
+	/**
+	 * @param string $type
+	 */
+	public function setType(?string $type): void {
+		$this->type = $type;
 	}
 }
 

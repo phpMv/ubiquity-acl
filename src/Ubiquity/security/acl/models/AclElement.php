@@ -59,7 +59,7 @@ class AclElement {
 	 * @transient
 	 */
 	#[Transient]
-	protected $type;
+	protected $type='';
 	
 	/**
 	 *
@@ -162,7 +162,7 @@ class AclElement {
 	/**
 	 * @param string $type
 	 */
-	public function setType(string $type): void {
+	public function setType(?string $type): void {
 		$this->type = $type;
 	}
 
