@@ -13,7 +13,7 @@ use Ubiquity\security\acl\persistence\AclProviderInterface;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.3
+ * @version 1.0.2
  * @property Role[] $roles
  * @property Resource[] $resources
  * @property Permission[] $permissions
@@ -146,31 +146,31 @@ trait AclListOperationsTrait {
 		$this->savePart($permission);
 	}
 
-	public function updateRole(String $roleName,Role $role){
+	public function updateRole(String $roleName, Role $role) {
 		$oldRole = $this->getRoleByName($roleName);
-		if($oldRole) {
-			$this->updatePart($roleName,$role);
+		if ($oldRole) {
+			$this->updatePart($roleName, $role);
 		}
 	}
 
-	public function updateResource(String $resourceName,Resource $resource){
+	public function updateResource(String $resourceName, Resource $resource) {
 		$oldResource = $this->getResourceByName($resourceName);
-		if($oldResource) {
-			$this->updatePart($resourceName,$resource);
+		if ($oldResource) {
+			$this->updatePart($resourceName, $resource);
 		}
 	}
 
-	public function updatePermission(String $permissionName,Permission $permission){
+	public function updatePermission(String $permissionName, Permission $permission) {
 		$oldPermission = $this->getPermissionByName($permissionName);
-		if($oldPermission) {
-			$this->updatePart($permissionName,$permission);
+		if ($oldPermission) {
+			$this->updatePart($permissionName, $permission);
 		}
 	}
 
 	public function setPermissionLevel(string $name, int $level) {
 		$perm = $this->getPermissionByName($name);
 		$perm->setLevel($level);
-		$this->updatePart($name,$perm);
+		$this->updatePart($name, $perm);
 	}
 
 	public function allow(string $roleName, string $resourceName, string $permissionName, $id=null) {
@@ -192,6 +192,18 @@ trait AclListOperationsTrait {
 			$this->addPermission(new Permission($permissionName));
 		}
 		$this->allow($roleName, $resourceName ?? '*', $permissionName ?? 'ALL', $id);
+	}
+
+	public function roleExists(string $roleName): bool {
+		return $this->elementExistByName($roleName, $this->roles);
+	}
+
+	public function resourceExists(string $resourceName): bool {
+		return $this->elementExistByName($resourceName, $this->resources);
+	}
+
+	public function permissionExists(string $permissionName): bool {
+		return $this->elementExistByName($permissionName, $this->permissions);
 	}
 }
 

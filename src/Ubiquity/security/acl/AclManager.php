@@ -17,6 +17,7 @@ use Ubiquity\controllers\Router;
 use Ubiquity\security\acl\persistence\AclDAOProvider;
 use Ubiquity\security\acl\persistence\AclProviderInterface;
 use Ubiquity\security\acl\traits\AclManagerInit;
+use Ubiquity\security\acl\traits\AclManagerTester;
 
 /**
  * Ubiquity\security\acl$AclManager
@@ -28,7 +29,7 @@ use Ubiquity\security\acl\traits\AclManagerInit;
  */
 class AclManager {
 
-	use AclManagerInit;
+	use AclManagerInit,AclManagerTester;
 
 	protected static ?AclList $aclList=null;
 
@@ -161,15 +162,6 @@ class AclManager {
 	}
 
 	/**
-	 * Checks if ACL cache is updated.
-	 * Do not use directly from this class: use checkCache instead.
-	 * @return bool
-	 */
-	public static function cacheUpdated(): bool {
-		return self::$aclList->cacheUpdated();
-	}
-	
-	/**
 	 *
 	 * @param string $role
 	 */
@@ -226,25 +218,5 @@ class AclManager {
 		self::$aclList->getResourceByName($resource);
 		self::$aclList->getPermissionByName($permission);
 		self::$permissionMap->addAction($controller, $action, $resource, $permission);
-	}
-
-	/**
-	 *
-	 * @param AbstractAclPart $part
-	 * @param string $providerClass
-	 * @return boolean
-	 */
-	public static function existPartIn(AbstractAclPart $part, string $providerClass):bool {
-		return self::$aclList->existPartIn($part, $providerClass);
-	}
-
-	/**
-	 *
-	 * @param AclElement $elm
-	 * @param string $providerClass
-	 * @return boolean
-	 */
-	public static function existAclIn(AclElement $elm, string $providerClass):bool {
-		return self::$aclList->existAclIn($elm, $providerClass);
 	}
 }
