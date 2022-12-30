@@ -61,6 +61,25 @@ class AclCacheProvider extends AclArrayProvider {
 			CacheManager::$cache->store($this->getRootKey($class), $this->parts[$class] ?? []);
 		}
 	}
+	
+	public function cacheUpdated(): bool {
+		$old=CacheManager::$cache->fetch($this->getRootKey('acls'));
+		if ($old!=$this->aclsArray) {
+			return true;
+		}
+		$classes = [
+			Role::class,
+			Resource::class,
+			Permission::class
+		];
+		foreach ($classes as $class) {
+			$old=CacheManager::$cache->fetch($this->getRootKey($class));
+			if ($old!=($this->parts[$class]??[])) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public function getDetails(): array {
 		return [

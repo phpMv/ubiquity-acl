@@ -23,7 +23,7 @@ use Ubiquity\security\acl\traits\AclManagerInit;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.1
+ * @version 1.0.2
  *
  */
 class AclManager {
@@ -160,6 +160,15 @@ class AclManager {
 		self::$aclList->saveAll();
 	}
 
+	/**
+	 * Checks if ACL cache is updated.
+	 * Do not use directly from this class: use checkCache instead.
+	 * @return bool
+	 */
+	public static function cacheUpdated(): bool {
+		return self::$aclList->cacheUpdated();
+	}
+	
 	/**
 	 *
 	 * @param string $role

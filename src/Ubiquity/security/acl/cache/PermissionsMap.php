@@ -10,7 +10,7 @@ use Ubiquity\security\acl\AclManager;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.2
+ * @version 1.0.3
  *
  */
 class PermissionsMap {
@@ -95,6 +95,11 @@ class PermissionsMap {
 			$result[] = new PermissionMapObject($k, $resource, $permission, $roles);
 		}
 		return $result;
+	}
+	
+	public function cacheUpdated(): bool {
+		$old=CacheManager::$cache->fetch($this->getRootKey(self::CACHE_KEY));
+		return $this->arrayMap!=$old;
 	}
 }
 

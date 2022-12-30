@@ -64,5 +64,7 @@ interface AclProviderInterface {
 	public function getDetails(): array;
 
 	public function getModelClassesSwap(): array;
+	
+	public function cacheUpdated(): bool;
 }
 

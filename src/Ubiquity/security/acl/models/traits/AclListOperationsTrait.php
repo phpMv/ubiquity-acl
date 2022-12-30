@@ -13,7 +13,7 @@ use Ubiquity\security\acl\persistence\AclProviderInterface;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.2
+ * @version 1.0.3
  * @property Role[] $roles
  * @property Resource[] $resources
  * @property Permission[] $permissions
@@ -116,6 +116,16 @@ trait AclListOperationsTrait {
 			}
 		}
 	}
+
+	public function cacheUpdated(): bool {
+		foreach ($this->providers as $provider) {
+			if (! $provider->isAutosave() && $provider->cacheUpdated()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	public function clear() {
 		$this->init();

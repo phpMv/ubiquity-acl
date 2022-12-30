@@ -319,4 +319,8 @@ class AclDAOProvider implements AclProviderInterface {
 		$dbProvider->generateDbTables($dbOffset);
 		return $dbProvider;
 	}
+	
+	public function cacheUpdated(): bool {
+		return false;
+	}
 }

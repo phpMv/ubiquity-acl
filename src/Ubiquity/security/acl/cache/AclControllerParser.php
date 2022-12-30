@@ -12,7 +12,7 @@ use Ubiquity\exceptions\AclException;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.2
+ * @version 1.0.3
  *
  */
 class AclControllerParser {
@@ -142,6 +142,13 @@ class AclControllerParser {
 	public function save() {
 		$this->permissionMap->save();
 		AclManager::saveAll();
+	}
+
+	public function cacheUpdated(): bool {
+		if ($this->permissionMap->cacheUpdated()) {
+			return true;
+		}
+		return AclManager::cacheUpdated();
 	}
 }
 
