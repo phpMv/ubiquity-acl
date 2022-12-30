@@ -134,9 +134,9 @@ trait AclManagerInit {
 	 * @throws \Ubiquity\exceptions\AclException
 	 */
 	public static function initCache(array &$config, bool $silent=false): void {
-		self::cacheOperation($config,$silent,function($parser){
+		self::cacheOperation($config, $silent, function ($parser) {
 			$parser->save();
-		},"ACLs cache reset\n");
+		}, "ACLs cache reset\n");
 	}
 
 	/**
@@ -144,13 +144,12 @@ trait AclManagerInit {
 	 * @return bool
 	 */
 	public static function checkCache(array &$config): bool {
-		$result= self::cacheOperation($config,true,function($parser){
+		return self::cacheOperation($config, true, function ($parser) {
 			return $parser->cacheUpdated();
 		});
-		return $result;
 	}
 
-	private static function cacheOperation(array &$config, bool $silent=false,$operation,$message=null) {
+	private static function cacheOperation(array &$config, bool $silent, $operation, $message=null) {
 		if (!self::isStarted()) {
 			self::start();
 			self::initFromProviders([
@@ -162,7 +161,7 @@ trait AclManagerInit {
 		self::registerAnnotations();
 		$files = \Ubiquity\cache\CacheManager::getControllersFiles($config, $silent);
 		$parser = new AclControllerParser();
-		//$parser->init();
+
 		foreach ($files as $file) {
 			if (\is_file($file)) {
 				$controller = ClassUtils::getClassFullNameFromFile($file);
@@ -175,7 +174,7 @@ trait AclManagerInit {
 				}
 			}
 		}
-		$result=$operation($parser);
+		$result = $operation($parser);
 		self::removefilterProviders();
 		self::reloadFromSelectedProviders();
 		if (!$silent) {
