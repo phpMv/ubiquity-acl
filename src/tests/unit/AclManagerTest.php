@@ -245,7 +245,7 @@ class AclManagerTest extends \Codeception\Test\Unit {
 		$this->aclManager->start();
 		$this->assertFalse($this->aclManager->resourceExists('Truc.*'));
 		$this->aclManager->addResource('Truc.*');
-		$this->assertTrue($this->aclManager->roleExists('Truc.*'));
+		$this->assertTrue($this->aclManager->resourceExists('Truc.*'));
 	}
 
 	/**
