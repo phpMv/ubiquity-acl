@@ -231,11 +231,31 @@ class AclManagerTest extends \Codeception\Test\Unit {
 	/**
 	 * Tests AclManager::roleExists()
 	 */
-	public function testRoleExist(){
+	public function testRoleExist() {
 		$this->aclManager->start();
 		$this->assertFalse($this->aclManager->roleExists('@Zorro'));
 		$this->aclManager->addRole('@Zorro');
 		$this->assertTrue($this->aclManager->roleExists('@Zorro'));
+	}
+
+	/**
+	 * Tests AclManager::resourceExists()
+	 */
+	public function testResourceExist() {
+		$this->aclManager->start();
+		$this->assertFalse($this->aclManager->resourceExists('Truc.*'));
+		$this->aclManager->addResource('Truc.*');
+		$this->assertTrue($this->aclManager->roleExists('Truc.*'));
+	}
+
+	/**
+	 * Tests AclManager::permissionExists()
+	 */
+	public function testPermissionExist() {
+		$this->aclManager->start();
+		$this->assertFalse($this->aclManager->permissionExists('BLUR'));
+		$this->aclManager->addPermission('BLUR');
+		$this->assertTrue($this->aclManager->permissionExists('BLUR'));
 	}
 }
 
