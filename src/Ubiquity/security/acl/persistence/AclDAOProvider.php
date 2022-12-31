@@ -39,8 +39,12 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @param array $classes
 	 *        	associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
 	 */
-	public function __construct(array &$config,$classes = []) {
+	public function __construct(array &$config, array $classes = []) {
 		Startup::$config=$config;
+		$this->setClasses($classes);
+	}
+
+	private function setClasses(array $classes): void {
 		$this->aclClass = $classes['acl'] ?? AclElement::class;
 		$this->roleClass = $classes['role'] ?? Role::class;
 		$this->resourceClass = $classes['resource'] ?? Resource::class;
@@ -69,7 +73,7 @@ class AclDAOProvider implements AclProviderInterface {
 		DAO::setModelDatabase($this->resourceClass, $dbOffset);
 		DAO::setModelDatabase($this->roleClass, $dbOffset);
 		DAO::setModelDatabase($this->permissionClass, $dbOffset);
-		if($persist){
+		if ($persist) {
 			CacheManager::storeModelsDatabases(DAO::getModelsDatabase ());
 		}
 	}
@@ -82,6 +86,7 @@ class AclDAOProvider implements AclProviderInterface {
 		$classes??=[
 			'acl'=>'models\\AclElement','role'=>'models\\Role','resource'=>'models\\Resource','permission'=>'models\\Permission'
 		];
+		$this->setClasses($classes);
 		$this->createModel($classes['acl'] ?? $this->aclClass,AclElement::class);
 		$this->createModel($classes['role'] ?? $this->roleClass,Role::class);
 		$this->createModel($classes['resource'] ?? $this->resourceClass,Resource::class);
