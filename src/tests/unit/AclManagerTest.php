@@ -227,5 +227,15 @@ class AclManagerTest extends \Codeception\Test\Unit {
 		$this->aclManager->setPermissionLevel('DELETE', 4);
 		$this->assertTrue($this->aclManager->isAllowed('user', 'newResource', 'DELETE'));
 	}
+
+	/**
+	 * Tests AclManager::roleExists()
+	 */
+	public function testRoleExist(){
+		$this->aclManager->start();
+		$this->assertFalse($this->aclManager->roleExists('@Zorro'));
+		$this->aclManager->addRole('@Zorro');
+		$this->assertTrue($this->aclManager->roleExists('@Zorro'));
+	}
 }
 
