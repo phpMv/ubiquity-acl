@@ -80,10 +80,10 @@ class AclDAOProvider implements AclProviderInterface {
 
 	/**
 	 * Generates the models.
-	 * @param ?array $classes associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
 	 * @param string $dbOffset default
+	 * @param ?array $classes associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
 	 */
-	public function createModels(?array $classes=null, string $dbOffset='default'): void {
+	public function createModels(string $dbOffset='default', ?array $classes=null): void {
 		$classes??=[
 			'acl'=>'models\\AclElement','role'=>'models\\Role','resource'=>'models\\Resource','permission'=>'models\\Permission'
 		];
