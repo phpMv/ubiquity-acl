@@ -21,7 +21,7 @@ use Ubiquity\security\acl\models\Role;
  * This class is part of Ubiquity
  *
  * @author jc
- * @version 1.0.2
+ * @version 1.0.3
  *
  */
 class AclDAOProvider implements AclProviderInterface {
@@ -33,7 +33,7 @@ class AclDAOProvider implements AclProviderInterface {
 	protected string $permissionClass;
 
 	protected string $resourceClass;
-
+	
 	/**
 	 * @param array $config The $config array
 	 * @param array $classes
@@ -68,7 +68,7 @@ class AclDAOProvider implements AclProviderInterface {
 	 * @param string $dbOffset
 	 * @param  bool $persist
 	 */
-	public function setDbOffset(string $dbOffset = 'default',bool $persist=true):void {
+	public function setDbOffset(string $dbOffset = 'default', bool $persist=true): void {
 		DAO::setModelDatabase($this->aclClass, $dbOffset);
 		DAO::setModelDatabase($this->resourceClass, $dbOffset);
 		DAO::setModelDatabase($this->roleClass, $dbOffset);
@@ -81,23 +81,28 @@ class AclDAOProvider implements AclProviderInterface {
 	/**
 	 * Generates the models.
 	 * @param ?array $classes associative array['acl'=>'','role'=>'','resource'=>'','permission'=>'']
+	 * @param string $dbOffset default
 	 */
-	public function createModels(?array $classes=null):void{
+	public function createModels(?array $classes=null, string $dbOffset='default'): void {
 		$classes??=[
 			'acl'=>'models\\AclElement','role'=>'models\\Role','resource'=>'models\\Resource','permission'=>'models\\Permission'
 		];
 		$this->setClasses($classes);
-		$this->createModel($classes['acl'] ?? $this->aclClass,AclElement::class);
-		$this->createModel($classes['role'] ?? $this->roleClass,Role::class);
-		$this->createModel($classes['resource'] ?? $this->resourceClass,Resource::class);
-		$this->createModel($classes['permission'] ?? $this->permissionClass,Permission::class);
+		$this->createModel($classes['acl'] ?? $this->aclClass,AclElement::class, $dbOffset);
+		$this->createModel($classes['role'] ?? $this->roleClass,Role::class, $dbOffset);
+		$this->createModel($classes['resource'] ?? $this->resourceClass,Resource::class, $dbOffset);
+		$this->createModel($classes['permission'] ?? $this->permissionClass,Permission::class, $dbOffset);
 	}
 
-	public function createModel($modelName,$refName):void{
-		if($modelName!==$refName){
+	public function createModel(string $modelName, string $refName, string $dbOffset='default'): void {
+		if ($modelName!==$refName) {
 			$className=ClassUtils::getClassSimpleName($modelName);
 			$ns=ClassUtils::getNamespaceFromCompleteClassname($modelName);
-			$cCreator=new ClassCreator($className,'',$ns,' extends \\'.$refName);
+			$cCreator=new ClassCreator($className, $ns, ' extends \\'.$refName);
+			if ($dbOffset!=='default') {
+				$annot=CacheManager::getAnnotationsEngineInstance()->getAnnotation($cCreator, 'database', ['name'=>$dbOffset]);
+				$cCreator->addClassAttribute($annot);
+			}
 			$cCreator->generate();
 		}
 	}
@@ -111,15 +116,15 @@ class AclDAOProvider implements AclProviderInterface {
 	public function generateDbTables(string $dbOffset='default',bool $createDb=false):void{
 		$this->setDbOffset($dbOffset);
 		$generator = new DatabaseReversor(new DbGenerator(), $dbOffset);
-		$activeOffsetValue=DAO::getDbOffset(Startup::$config,$dbOffset);
-		if(($dbName=$activeOffsetValue['dbName']??'')!='') {
+		$activeOffsetValue=DAO::getDbOffset(Startup::$config, $dbOffset);
+		if (($dbName=$activeOffsetValue['dbName']??'')!='') {
 			$generator->setModels([$this->aclClass,$this->roleClass,$this->resourceClass,$this->permissionClass]);
 			$generator->createDatabase($dbName, $createDb);
 			$db=DAO::getDatabase($dbOffset);
 			$db->beginTransaction();
 			$db->execute($generator->__toString());
 			$db->commit();
-		}else{
+		} else {
 			throw new AclException('dbName key is not present or his value is empty!');
 		}
 	}
@@ -131,7 +136,7 @@ class AclDAOProvider implements AclProviderInterface {
 	 */
 	public function loadAllAcls(): array {
 		$result= DAO::getAll($this->aclClass);
-		foreach ($result as $elm){
+		foreach ($result as $elm) {
 			$elm->setType(AclDAOProvider::class);
 		}
 		return $result;
@@ -144,19 +149,19 @@ class AclDAOProvider implements AclProviderInterface {
 	 */
 	public function saveAcl(AclElement $aclElement) {
 		$aclElement->_rest=[];
-		if(!$this->existPart($aclElement->getResource())){
+		if (!$this->existPart($aclElement->getResource())) {
 			$this->savePart($aclElement->getResource());
 		}
-		if(!$this->existPart($aclElement->getPermission())){
+		if (!$this->existPart($aclElement->getPermission())) {
 			$this->savePart($aclElement->getPermission());
 		}
-		if(!$this->existPart($aclElement->getRole())){
+		if (!$this->existPart($aclElement->getRole())) {
 			$this->savePart($aclElement->getRole());
 		}
 		$object = $this->castElement($aclElement);
-		if($this->existAcl($aclElement)){
+		if ($this->existAcl($aclElement)) {
 			$res=DAO::update($object);
-		}else {
+		} else {
 			$res = DAO::insert($object);
 		}
 		if ($res) {
@@ -223,10 +228,10 @@ class AclDAOProvider implements AclProviderInterface {
 	 */
 	public function savePart(\Ubiquity\security\acl\models\AbstractAclPart $part) {
 		$object = $this->castElement($part);
-		if($this->existPart($part)) {
+		if ($this->existPart($part)) {
 			$object->_rest=[];
 			$res = DAO::update($object);
-		}else{
+		} else {
 			$res=DAO::insert($object);
 		}
 		if ($res) {
@@ -240,7 +245,7 @@ class AclDAOProvider implements AclProviderInterface {
 	 * {@inheritdoc}
 	 * @see \Ubiquity\security\acl\persistence\AclProviderInterface::updatePart()
 	 */
-	public function updatePart(string $id,\Ubiquity\security\acl\models\AbstractAclPart $part) {
+	public function updatePart(string $id, \Ubiquity\security\acl\models\AbstractAclPart $part) {
 		$object=$this->castElement($part);
 		$object->_rest=[];
 		$object->_pkv['___name']=$id;
